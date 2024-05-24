@@ -52,9 +52,9 @@ Optional Name-Value pair arguments:
 Description: Super-resolution using the least-squares estimator
 ```
 Now, you may want to jump to [practical
-examples](matlab#examples-reproduce-several-experiments-of-the-companion-research-article)
+examples](matlab##examples-reproduce-several-experiments-of-the-companion-article)
 (and reproduce some experiments presented the companion article) or to
-have a closer look to the [modules contained into this package](matlab#user-content-package-description-and-organization).
+have a closer look to the [modules contained into this package](matlab#modules-description).
 
 ## Modules description
 
