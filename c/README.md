@@ -27,9 +27,8 @@ on most systems.
 ### Compilation with gcc
 
 All the C modules of this software can be installed at once by
-executing the `SETUP_C_MODULES` executable file (bash) contained in
-the root directory of this software. From the root directory of this
-software, run the following command :
+executing the [`SETUP_C_MODULES`](SETUP_C_MODULES) executable file
+(bash):
 
 ```bash
 ./SETUP_C_MODULES
@@ -79,8 +78,8 @@ in the standard output:
 
 Notice that you can also manually compile each module using gcc (the
 compilation commands can be adapted to other C-compilers). To that
-aim, place yourself into the [`src_c`](src_c) directory of this
-software, and run the following commands:
+aim, place yourself into the [`c/src`](src) directory, and run the
+following commands:
 
 ```bash
 gcc -w -O3 simulator.c operators_kernel.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -lm -ltiff -lfftw3 -o simulator
@@ -111,7 +110,7 @@ gcc -w -O3 tiffop.c tiffread.c tiffwrite.c -lm -ltiff -o tiffop
 gcc -w -O3 tiffthre.c tiffread.c tiffwrite.c -lm -ltiff -o tiffthre
 ```
 When the installation is done, you should be able to find the executable files
-listed below in the [`src_c`](src_c) directory of the software:
+listed below in the [`c/src`](src) directory of the software:
 
 + `simulator`
 + `stack-apodization`
@@ -144,8 +143,8 @@ listed below in the [`src_c`](src_c) directory of the software:
    
 You can check the usage and see a (short) documentation of each module
 by running the corresponding executable file without argument. For
-instance, if you place yourself in the [`src_c`](src_c) directory, the
-following instruction
+instance, if you place yourself in the [`c/src`](src), the following
+instruction
 
 ```bash
 ./leastsquares-superres
@@ -180,7 +179,7 @@ Error: input 'in' is missing
 ### Optional additional libraries for data visualization
 
 In the
-[Examples](DOCUMENTATION_C.md#user-content-examples-reproduce-several-experiments-of-our-publication)
+[Examples](c#user-content-examples-reproduce-several-experiments-of-our-publication)
 Section of this documentation, we shall use
 [ImageJ](https://imagej.net/ij/) and
 [Gnuplot](http://www.gnuplot.info/) for image displaying and graphing
@@ -198,17 +197,17 @@ interface).
 
 Now, you may want to jump to [practical examples and reproduce some
 experiments presented in our
-paper](DOCUMENTATION_C.md#user-content-examples-reproduce-several-experiments-of-our-publication)
+paper](c#user-content-examples-reproduce-several-experiments-of-our-publication)
 or to have a closer look to the [source code organization and
-content](DOCUMENTATION_C.md?ref_type=heads#user-content-software-description-and-organization).
+content](c#user-content-software-description-and-organization).
 
 ## Software description and organization
 ### Organization
 
 This software is organized as follows:
 
-+ the [`data`](data) directory contains some testing datasets,
-+ the [`src_c`](src_c) directory contains all the source files (.c).
++ the [`data`](../data) directory contains some testing datasets,
++ the [`c/src`](src) directory contains all the source files (.c).
 
 The source files can be separated into three categories named as
 "kernel" (`KNL`), "Input/Output" (`I/O`), or "Command Line Interface"
@@ -235,76 +234,76 @@ image processing library.
 We give below a synthetic description of the kernel source files of
 the software.
 
-| SOURCE FILE                                                          | TYPE  | CONTENT / PURPOSE                                                                                        | RELATED PARTS OF THE IPOL PAPER                               |
-|----------------------------------------------------------------------|-------|----------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| [`operators_kernel.c`](src_c/operators_kernel.c)                     | `KNL` | routines related to the A operator and its adjoint                                                       | Section 2.2, Section 3, Section 6                             |
-| [`apodization_kernel.c`](src_c/apodization_kernel.c)                 | `KNL` | routines related to the apodization of a sequence of low-resolution images                               | Section 2.3                                                   |
-| [`blockmatrix_kernel.c`](src_c/blockmatrix_kernel.c)                 | `KNL` | routines dedicated to the computation of the block matrix defined in (37) and to matrix pseudo inversion | Section 3.3, pseudocode Algorithm 1                           |
-| [`error-prediction_kernel.c`](src_c/error-prediction_kernel.c)       | `KNL` | routines dedicated to the prediction of the reconstruction error                                         | Section 4                                                     |
-| [`leastsquares_kernel.c`](src_c/leastsquares_kernel.c)               | `KNL` | routines related to super-resolution using the least-squares, IRLS and lucky-imaging                     | Pseudocode algorithms 1 & 2, Section 6 (IRLS & lucky-imaging) |
-| [`sharpening_kernel.c`](src_c/sharpening_kernel.c)                   | `KNL` | routines related to image sharpening                                                                     | Section 7                                                     |
-| [`tools_kernel.c`](src_c/tools_kernel.c)                             | `KNL` | routines dedicated to several image manipulations (circular convolution, sub-pixel shift, zooming, etc.) | --                                                            |
-| [`remove-blackborders_kernel.c`](src_c/remove-blackborders_kernel.c) | `KNL` | post-treatment tool for removing borders caused by apodization in the processed high-resolution images   | Section 2.3, Section 4 (Figure 6)                             |
+| SOURCE FILE                                                        | TYPE  | CONTENT / PURPOSE                                                                                        | RELATED PARTS OF THE COMPANION ARTICLE                        |
+|--------------------------------------------------------------------|-------|----------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| [`operators_kernel.c`](src/operators_kernel.c)                     | `KNL` | routines related to the A operator and its adjoint                                                       | Section 2.2, Section 3, Section 6                             |
+| [`apodization_kernel.c`](src/apodization_kernel.c)                 | `KNL` | routines related to the apodization of a sequence of low-resolution images                               | Section 2.3                                                   |
+| [`blockmatrix_kernel.c`](src/blockmatrix_kernel.c)                 | `KNL` | routines dedicated to the computation of the block matrix defined in (37) and to matrix pseudo inversion | Section 3.3, pseudocode Algorithm 1                           |
+| [`error-prediction_kernel.c`](src/error-prediction_kernel.c)       | `KNL` | routines dedicated to the prediction of the reconstruction error                                         | Section 4                                                     |
+| [`leastsquares_kernel.c`](src/leastsquares_kernel.c)               | `KNL` | routines related to super-resolution using the least-squares, IRLS and lucky-imaging                     | Pseudocode algorithms 1 & 2, Section 6 (IRLS & lucky-imaging) |
+| [`sharpening_kernel.c`](src/sharpening_kernel.c)                   | `KNL` | routines related to image sharpening                                                                     | Section 7                                                     |
+| [`tools_kernel.c`](src/tools_kernel.c)                             | `KNL` | routines dedicated to several image manipulations (circular convolution, sub-pixel shift, zooming, etc.) | --                                                            |
+| [`remove-blackborders_kernel.c`](src/remove-blackborders_kernel.c) | `KNL` | post-treatment tool for removing borders caused by apodization in the processed high-resolution images   | Section 2.3, Section 4 (Figure 6)                             |
 
 More details about the relations between the content of the kernel
-source files and the IPOL paper are given below.
+source files and the companion article are given below.
 
 
-| NAME OF THE ROUTINE    | SOURCE FILE                                                    | RELATION WITH THE IPOL PAPER                                                                                                                      |
-|------------------------|----------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `apodization`          | [`apodization_kernel.c`](src_c/apodization_kernel.c)           | computes the apodization filter *gamma* involved in Equation (14) and (15) as well the apodized low-resolution sequence defined in (16)           |
-| `direct_operator_dft`  | [`operators_kernel.c`](src_c/operators_kernel.c)               | computes the **Discrete Fourier Transform (DFT) of Aj(u)** (operator Aj applied to the high-resolution image u) using Equation (27)               |
-| `adjoint_operator_dft` | [`operators_kernel.c`](src_c/operators_kernel.c)               | computes the *DFT of adj_Aj(v)* (adjoint of Aj applied to the low-resolution image v) using Equation (28)                                         |
-| `compute_blockmatrix`  | [`leastsquares_kernel.c`](src_c/leastsquares_kernel.c)         | implements the pseudocode **Algorithm 1**                                                                                                         |
-| `leastsquares`         | [`leastsquares_kernel.c`](src_c/leastsquares_kernel.c)         | implements the pseudocode **Algorithm 2**                                                                                                         |
-| `irls`                 | [`leastsquares_kernel.c`](src_c/leastsquares_kernel.c)         | implements the **IRLS scheme** described in Equation (56)                                                                                         |
-| `luckyimaging`         | [`leastsquares_kernel.c`](src_c/leastsquares_kernel.c)         | implements the **lucky-imaging procedure** described in Section 6                                                                                 |
-| `error_prediction`     | [`error-prediction_kernel.c`](src_c/error-prediction_kernel.c) | compute the error amplification map A defined in Equation (41) and the predicted MSE and PSNR (46) associated to the least-squares reconstruction |
-| `sharpening`           | [`sharpening_kernel.c`](src_c/sharpening_kernel.c)             | apply the sharpening enhancement post-processing to a super-resolved image using (58)                                                             |
+| NAME OF THE ROUTINE    | SOURCE FILE                                                  | RELATION WITH THE COMPANION ARTICLE                                                                                                               |
+|------------------------|--------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `apodization`          | [`apodization_kernel.c`](src/apodization_kernel.c)           | computes the apodization filter *gamma* involved in Equation (14) and (15) as well the apodized low-resolution sequence defined in (16)           |
+| `direct_operator_dft`  | [`operators_kernel.c`](src/operators_kernel.c)               | computes the **Discrete Fourier Transform (DFT) of Aj(u)** (operator Aj applied to the high-resolution image u) using Equation (27)               |
+| `adjoint_operator_dft` | [`operators_kernel.c`](src/operators_kernel.c)               | computes the *DFT of adj_Aj(v)* (adjoint of Aj applied to the low-resolution image v) using Equation (28)                                         |
+| `compute_blockmatrix`  | [`leastsquares_kernel.c`](src/leastsquares_kernel.c)         | implements the pseudocode **Algorithm 1**                                                                                                         |
+| `leastsquares`         | [`leastsquares_kernel.c`](src/leastsquares_kernel.c)         | implements the pseudocode **Algorithm 2**                                                                                                         |
+| `irls`                 | [`leastsquares_kernel.c`](src/leastsquares_kernel.c)         | implements the **IRLS scheme** described in Equation (56)                                                                                         |
+| `luckyimaging`         | [`leastsquares_kernel.c`](src/leastsquares_kernel.c)         | implements the **lucky-imaging procedure** described in Section 6                                                                                 |
+| `error_prediction`     | [`error-prediction_kernel.c`](src/error-prediction_kernel.c) | compute the error amplification map A defined in Equation (41) and the predicted MSE and PSNR (46) associated to the least-squares reconstruction |
+| `sharpening`           | [`sharpening_kernel.c`](src/sharpening_kernel.c)             | apply the sharpening enhancement post-processing to a super-resolved image using (58)                                                             |
 	
 ### Description of the Command line interface source files of the software
 
-| SOURCE FILE                                                | TYPE  | CONTENT / PURPOSE                                                             | RELATED PARTS OF THE IPOL PAPER                                                                   |
-|------------------------------------------------------------|-------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| [`simulator.c`](src_c/simulator.c)                         | `CLI` | Compute a stack of (shifted and subsampled) low-resolution images             | corresponds to the operator A defined in Equation (12)                                            |
-| [`stack-apodization.c`](src_c/stack-apodization.c)         | `CLI` | Compute low/high resolution multiplicative apodization filters                | Section 2.3                                                                                       |
-| [`leastsquares-superres.c`](src_c/leastsquares-superres.c) | `CLI` | Super-resolution using the least-squares estimator                            | Section 3                                                                                         |
-| [`error-prediction.c`](src_c/error-prediction.c)           | `CLI` | Prediction of the super-resolution reconstruction quality                     | Section 4                                                                                         |
-| [`irls.c`](src_c/irls.c)                                   | `CLI` | Iteratively Reweighted Least-Squares                                          | Section 6                                                                                         |
-| [`luckyimaging.c`](src_c/luckyimaging.c)                   | `CLI` | Lucky-imaging procedure                                                       | Section 6                                                                                         |
-| [`sharpening.c`](src_c/sharpening.c)                       | `CLI` | Image sharpening using a Wiener filter                                        | Section 7                                                                                         |
-| [`remove-blackborders.c`](src_c/remove-blackborders.c)     | `CLI` | Crop borders caused by apodization in high-resolution images                  | Figure 6                                                                                          |
-| [`register-stack.c`](src_c/register-stack.c)               | `CLI` | Register a stack of TIFF images from a sequence of registration displacements | Figure 11(b) or Figure 12(b) (*shift-and-add* & *shift-and-median*)                               |
-| [`random-shifts.c`](src_c/random-shifts.c)                 | `CLI` | Generate a random sequence of 2D displacements (uniform distribution)         | sections 5.2 to 5.4 (simulation of random shift sequences)                                        |
-| [`shifts-noise.c`](src_c/shifts-noise.c)                   | `CLI` | Add noise to a sequence of 2D displacements                                   | Section 5.4 and Section 6 (for corrupting a sequence of displacements using random perturbations) |
-| [`tiffzoom.c`](src_c/tiffzoom.c)                           | `CLI` | Magnification of a TIFF image using the Shannon interpolation                 | Figure 10 (third row), Figure 14 (second column)                                                  |
-| [`tiffaddnoise.c`](src_c/tiffaddnoise.c)                   | `CLI` | Add a white Gaussian noise to a TIFF image                                    | Section 5 (for adding noise to synthetic sequences)                                               |
-| [`tiffdft.c`](src_c/tiffdft.c)                             | `CLI` | Compute the 2D Fourier Transform (DFT) of a TIFF image                        | Figure 7, Figure 10, Figure 12, Figure 14                                                         |
-| [`tiffmse.c`](src_c/tiffmse.c)                             | `CLI` | Compute the distance between two TIFF images (SNR, MSE and PSNR metrics)      | --                                                                                                |
-| [`tiffmerge.c`](src_c/tiffmerge.c)                         | `CLI` | Merge a set of TIFF images into a multipage TIFF image (TIFF-stack)           | --                                                                                                |
-| [`tiffsqrt.c`](src_c/tiffsqrt.c)                           | `CLI` | Pixelwise square root of a TIFF image                                         | --                                                                                                |
-| [`tiffsize.c`](src_c/tiffsize.c) (*)                       | `CLI` | Display the dimensions (width, height, number of pages) of a TIFF image       | --                                                                                                |
-| [`tiffaxpb.c`](src_c/tiffaxpb.c) (*)                       | `CLI` | Gain/Offset correction to a TIFF image                                        | --                                                                                                |
-| [`tiffconst.c`](src_c/tiffconst.c) (*)                     | `CLI` | Create TIFF image with constant gray level                                    | --                                                                                                |
-| [`tiffcopy.c`](src_c/tiffcopy.c) (*)                       | `CLI` | Copy a TIFF image (useful for TIFF datatype conversion)                       | --                                                                                                |
-| [`tiffextract.c`](src_c/tiffextract.c) (*)                 | `CLI` | Extract a subpart of a TIFF image                                             | --                                                                                                |
-| [`tiffop.c`](src_c/tiffop.c) (*)                           | `CLI` | Perform an elementary operation between two TIFF images                       | --                                                                                                |
-| [`tiffprintasc.c`](src_c/tiffprintasc.c) (*)               | `CLI` | Print the graylevels of a TIFF image in ascii format                          | --                                                                                                |
-| [`tiffreadasc.c`](src_c/tiffreadasc.c) (*)                 | `CLI` | Read a monopage TIFF image in ascii format                                    | --                                                                                                |
-| [`tiffthre.c`](src_c/tiffthre.c) (*)                       | `CLI` | Threshold/normalize the pixel's gray-levels of a TIFF image                   | --                                                                                                |
+| SOURCE FILE                                              | TYPE  | CONTENT / PURPOSE                                                             | RELATED PARTS OF THE COMPANION ARTICLE                                                            |
+|----------------------------------------------------------|-------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| [`simulator.c`](src/simulator.c)                         | `CLI` | Compute a stack of (shifted and subsampled) low-resolution images             | corresponds to the operator A defined in Equation (12)                                            |
+| [`stack-apodization.c`](src/stack-apodization.c)         | `CLI` | Compute low/high resolution multiplicative apodization filters                | Section 2.3                                                                                       |
+| [`leastsquares-superres.c`](src/leastsquares-superres.c) | `CLI` | Super-resolution using the least-squares estimator                            | Section 3                                                                                         |
+| [`error-prediction.c`](src/error-prediction.c)           | `CLI` | Prediction of the super-resolution reconstruction quality                     | Section 4                                                                                         |
+| [`irls.c`](src/irls.c)                                   | `CLI` | Iteratively Reweighted Least-Squares                                          | Section 6                                                                                         |
+| [`luckyimaging.c`](src/luckyimaging.c)                   | `CLI` | Lucky-imaging procedure                                                       | Section 6                                                                                         |
+| [`sharpening.c`](src/sharpening.c)                       | `CLI` | Image sharpening using a Wiener filter                                        | Section 7                                                                                         |
+| [`remove-blackborders.c`](src/remove-blackborders.c)     | `CLI` | Crop borders caused by apodization in high-resolution images                  | Figure 6                                                                                          |
+| [`register-stack.c`](src/register-stack.c)               | `CLI` | Register a stack of TIFF images from a sequence of registration displacements | Figure 11(b) or Figure 12(b) (*shift-and-add* & *shift-and-median*)                               |
+| [`random-shifts.c`](src/random-shifts.c)                 | `CLI` | Generate a random sequence of 2D displacements (uniform distribution)         | sections 5.2 to 5.4 (simulation of random shift sequences)                                        |
+| [`shifts-noise.c`](src/shifts-noise.c)                   | `CLI` | Add noise to a sequence of 2D displacements                                   | Section 5.4 and Section 6 (for corrupting a sequence of displacements using random perturbations) |
+| [`tiffzoom.c`](src/tiffzoom.c)                           | `CLI` | Magnification of a TIFF image using the Shannon interpolation                 | Figure 10 (third row), Figure 14 (second column)                                                  |
+| [`tiffaddnoise.c`](src/tiffaddnoise.c)                   | `CLI` | Add a white Gaussian noise to a TIFF image                                    | Section 5 (for adding noise to synthetic sequences)                                               |
+| [`tiffdft.c`](src/tiffdft.c)                             | `CLI` | Compute the 2D Fourier Transform (DFT) of a TIFF image                        | Figure 7, Figure 10, Figure 12, Figure 14                                                         |
+| [`tiffmse.c`](src/tiffmse.c)                             | `CLI` | Compute the distance between two TIFF images (SNR, MSE and PSNR metrics)      | --                                                                                                |
+| [`tiffmerge.c`](src/tiffmerge.c)                         | `CLI` | Merge a set of TIFF images into a multipage TIFF image (TIFF-stack)           | --                                                                                                |
+| [`tiffsqrt.c`](src/tiffsqrt.c)                           | `CLI` | Pixelwise square root of a TIFF image                                         | --                                                                                                |
+| [`tiffsize.c`](src/tiffsize.c) (*)                       | `CLI` | Display the dimensions (width, height, number of pages) of a TIFF image       | --                                                                                                |
+| [`tiffaxpb.c`](src/tiffaxpb.c) (*)                       | `CLI` | Gain/Offset correction to a TIFF image                                        | --                                                                                                |
+| [`tiffconst.c`](src/tiffconst.c) (*)                     | `CLI` | Create TIFF image with constant gray level                                    | --                                                                                                |
+| [`tiffcopy.c`](src/tiffcopy.c) (*)                       | `CLI` | Copy a TIFF image (useful for TIFF datatype conversion)                       | --                                                                                                |
+| [`tiffextract.c`](src/tiffextract.c) (*)                 | `CLI` | Extract a subpart of a TIFF image                                             | --                                                                                                |
+| [`tiffop.c`](src/tiffop.c) (*)                           | `CLI` | Perform an elementary operation between two TIFF images                       | --                                                                                                |
+| [`tiffprintasc.c`](src/tiffprintasc.c) (*)               | `CLI` | Print the graylevels of a TIFF image in ascii format                          | --                                                                                                |
+| [`tiffreadasc.c`](src/tiffreadasc.c) (*)                 | `CLI` | Read a monopage TIFF image in ascii format                                    | --                                                                                                |
+| [`tiffthre.c`](src/tiffthre.c) (*)                       | `CLI` | Threshold/normalize the pixel's gray-levels of a TIFF image                   | --                                                                                                |
 
 (*) modules adapted or inspired from the MegaWave image processing library [2].
 
 
 ### Description of the I/O source files of the software
 
-| SOURCE FILE                                      | TYPE  | CONTENT / PURPOSE                                                                                                   |
-|--------------------------------------------------|-------|---------------------------------------------------------------------------------------------------------------------|
-| [`tiffread.c`](src_c/tiffread.c)                 | `I/O` | read TIFF images in signed or unsigned 8, 16, 32 or float precision store the graylevels in double precision        |
-| [`tiffwrite.c`](src_c/tiffwrite.c)               | `I/O` | write TIFF images in signed or unsigned 8, 16, 32 or float precision from its graylevels stored in double precision |
-| [`tiffreadcomplex.c`](src_c/tiffreadcomplex.c)   | `I/O` | complex variant of tiffread.c (store the graylevels as the real part of a `fftw_complex`)                           |
-| [`tiffwritecomplex.c`](src_c/tiffwritecomplex.c) | `I/O` | complex variant of tiffwrite.c (write as a TIFF image the real part of the `fftw_complex` graylevels)               |
-| [`ascii.c`](src_c/ascii.c)                       | `I/O` | routines dedicated to manipulation of files in ASCII format                                                         |
+| SOURCE FILE                                    | TYPE  | CONTENT / PURPOSE                                                                                                   |
+|------------------------------------------------|-------|---------------------------------------------------------------------------------------------------------------------|
+| [`tiffread.c`](src/tiffread.c)                 | `I/O` | read TIFF images in signed or unsigned 8, 16, 32 or float precision store the graylevels in double precision        |
+| [`tiffwrite.c`](src/tiffwrite.c)               | `I/O` | write TIFF images in signed or unsigned 8, 16, 32 or float precision from its graylevels stored in double precision |
+| [`tiffreadcomplex.c`](src/tiffreadcomplex.c)   | `I/O` | complex variant of tiffread.c (store the graylevels as the real part of a `fftw_complex`)                           |
+| [`tiffwritecomplex.c`](src/tiffwritecomplex.c) | `I/O` | complex variant of tiffwrite.c (write as a TIFF image the real part of the `fftw_complex` graylevels)               |
+| [`ascii.c`](src/ascii.c)                       | `I/O` | routines dedicated to manipulation of files in ASCII format                                                         |
 
 ## Examples (reproduce several experiments of our publication)
 ### Simulate realistic low-resolution sequences
@@ -313,8 +312,8 @@ We illustrate a procedure for synthetizing realistic sequences of
 low-resolution images from a given high-resolution image and a
 sequence of displacements.
 	
-Place yourself in the [`src_c`](src_c) directory of this software and
-run the following bash commands
+Place yourself in the [`c/src`](src) directory of this software and
+run the following bash commands:
 
 ```bash
 # display a high-resolution image using ImageJ
@@ -347,7 +346,7 @@ dealing with periodization artifacts induced by the periodicity of the
 Shannon interpolate when computing a super-resolved image using the
 leastsquare-superres module.
 
-Place yourself in the [`src_c`](src_c) directory of this software and
+Place yourself in the [`c/src`](src) directory of this software and
 run the following commands:
 
 ```bash
@@ -379,8 +378,8 @@ along both dimensions (zx=zy=2) from a sequence containing L = 20
 noisy low-resolution images, with no perturbation on the
 displacements.
 
-Place yourself in the [`src_c`](src_c) directory of this software and
-run the following bash commands
+Place yourself in the [`c/src`](src) directory of this software and
+run the following bash commands:
 
 ```bash
 # compute a realistic sequence containing L=20 low-resolution images
@@ -432,8 +431,8 @@ afterwards (because, by construction, the apodization filter vanishes
 where the periodic-like artifact occur in the non-realistic simulated
 sequence).
 	
-Place yourself in the [`src_c`](src_c) directory of this software and run
-the following bash commands
+Place yourself in the [`c/src`](src) directory of this software and run
+the following bash commands:
 
 ```bash
 # configure experimental parameters (using bash variables)
@@ -502,7 +501,7 @@ imagej /tmp/mov.tif # first image = observed normalized error, second image = ex
 In the following script, we focus on the reconstruction error in both
 Fourier & spatial domains, we reproduce (with larger image domains)
 experiments similar to that described in Figure 4 and Figure 5.
-   
+
 ```bash
 # set size of the low and high resolution domains (use bash
 # variables)
@@ -776,8 +775,8 @@ displayed in the first row of Figure 9, showing how the displacement
 configuration may affect the quality reconstruction (especially when L
 is close to zx*zy).
 
-Place yourself in the [`src_c`](src_c) directory of this software and
-run the following bash commands
+Place yourself in the [`c/src`](src) directory of this software and
+run the following bash commands:
 
 ```bash
 # compute three sequences containing 4 low-resolution images using the
@@ -826,8 +825,8 @@ In the following experiment, we perform least-squares reconstruction
 from inexact sequences of displacements, which corresponds to a
 similar experiment as that displayed in Figure 10.
    
-Place yourself in the [`src_c`](src_c) directory of this software and run the
-following bash commands
+Place yourself in the [`c/src`](src) directory of this software and
+run the following bash commands:
 
 ```bash
 # compute a synthetic sequence containing L=20 low-resolution images
@@ -883,20 +882,18 @@ imagej /tmp/out_sig0.2.tif /tmp/dft_out_sig0.2.tif;
 ./tiffextract -r /tmp/out_sig0.2_zoom.tif /tmp/out_sig0.2_zoom.tif 1296  336  340  244
 imagej /tmp/out_sig0.01_zoom.tif /tmp/out_sig0.05_zoom.tif /tmp/out_sig0.1_zoom.tif /tmp/out_sig0.2_zoom.tif
 ```
-   
+
 ### Least-squares reconstruction over real data (reproduce Figure 12)
 
 This experiments intents to perform super-resolution with factor 1.8
 along both dimensions (zx=zy=1.8) from a real-life sequence containing
 L = 500 thermal infrared images that we acquired by ourselves (the
 associated sequence of displacements was estimated from the
-low-resolution sequence using Keren's algorithm [3]).
-   
-This experiments partially reproduces Figure 12 of the companion paper
-[1].
+low-resolution sequence using Keren's algorithm [3]). This experiments
+partially reproduces Figure 12 of the companion article.
 
-Place yourself in the [`src_c`](src_c) directory of this software and run the
-following bash commands
+Place yourself in the [`c/src`](src) directory of this software and
+run the following bash commands:
 
 ```bash
 # normalize and apodize the FLIR sequence to avoid edge effects in the
@@ -927,14 +924,14 @@ imagej /tmp/first_dft.tif /tmp/shiftandmedian_dft.tif /tmp/leastsquares_dft.tif
 ### IRLS & Lucky imaging (reproduce Figure 14)
 
 We reproduce here a similar experiment to that proposed in Figure 14
-of the IPOL paper (again, the result will formally slightly differ due
-to the random generation of the experiment parameters). This
-experiment illustrates how the lucky-imaging procedure can be used to
-remove outliers from the initial sequence in order to improve the
-reconstruction quality.
+of the companion article (again, the result will formally slightly
+differ due to the random generation of the experiment
+parameters). This experiment illustrates how the lucky-imaging
+procedure can be used to remove outliers from the initial sequence in
+order to improve the reconstruction quality.
 
-Place yourself in the [`src_c`](src_c) directory of this software and
-run the following bash commands
+Place yourself in the [`c/src`](src) directory of this software and
+run the following bash commands:
    
 ```bash
 # compute a synthetic sequence containing L=20 low-resolution images
@@ -1007,7 +1004,7 @@ imagej /tmp/dft_ls.tif /tmp/dft_l1l2.tif /tmp/dft_lucky.tif
   determined from a visual inspection of this movie (in the spatial
   and/or in the Fourier domain)
    
-See another example below.
+See another example below:
 
 ```bash
 # compute a synthetic sequence containing L=20 low-resolution images
@@ -1057,16 +1054,14 @@ imagej /tmp/out_lucky.tif /tmp/out_lucky_dft.tif
 	
 The next experiment illustrates the benefit of applying frequency
 enhancement procedure (i.e., the sharpening filter described in
-Section 7 of the companion IPOL paper) after the least-squares
+Section 7 of the companion article) after the least-squares
 super-resolution reconstruction process over a real data sequence (the
-FLIR T640 thermal infrared image sequence).
+FLIR T640 thermal infrared image sequence). This experiments
+reproduces Figure 17 of the companion article.
 	
-This experiments reproduces Figure 17 of the companion IPOL paper
-[1].
-	
-Place yourself in the [`src_c`](src_c) directory of this software and
+Place yourself in the [`c/src`](src) directory of this software and
 run the following bash commands
-	
+
 ```bash
 # normalize & apodize the FLIR sequence to avoid edge effects in the
 # reconstruction
@@ -1089,7 +1084,3 @@ run the following bash commands
 # display and compare high-resolution images 
 imagej /tmp/shiftandmedian_zoomed.tif /tmp/shiftandmedian_zoomed_sharpened.tif /tmp/leastsquares.tif /tmp/leastsquares_sharpened.tif
 ```
-
-## References
-
-TODO

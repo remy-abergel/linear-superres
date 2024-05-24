@@ -8,18 +8,28 @@ super-resolved image from multiple shifted images of the same scene.
 It is made of two **independent packages**, one implemented in C, and
 the other in Matlab, stored in the two following directories:
 
-+ [c](c): package (sources + documentation) in C language;
-+ [matlab](matla): package (source + documentation) in C language.
++ [c](c): package ([sources](c/src) + [documentation](c/README.md)) in C language;
++ [matlab](matlab): package ([sources](matlab/src) + [documentation](matlab/README.md)) in C language.
 
 You can install and use either one or both of those two packages
 independently.
-	
-## Installation and documentations
 
-+ Documentation and installation instructions for the C package are available [here](c/README.md).
-+ Documentation and installation instructions for the Matlab package is available [here](matlab/README.md).
-   
+## Companion research article
+
+The algorithms contained in this software are described in the
+following research paper:
+	
+Rémy Abergel, Andrés Almansa, Lionel Moisan and Camille Noûs, "Linear
+Super-Resolution Through Translational Motion", Preprint HAL
+[hal_link](https://hal.sciences/xxxxxxx).
+
+This work was submitted to the Image Processing On Line (IPOL) Journal
+and is currently under review.
+
 ## License
+
+TODO 
+
 ## Contact
    
 This work was done at [Université Paris Cité](https://u-paris.fr/),
