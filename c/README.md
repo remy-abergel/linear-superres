@@ -196,10 +196,10 @@ Of course, the installation of ImageJ and Gnuplot is not mandatory
 interface).
 
 Now, you may want to jump to [practical
-examples](c#examples-reproduce-several-experiments-of-the-companion-research-article)
+examples](#examples-reproduce-several-experiments-of-the-companion-research-article)
 (and reproduce some experiments presented the companion article) or to
 have a closer look to the [source code organization and
-content](c#user-content-package-description-and-organization).
+content](#package-description-and-organization).
 
 ## Package description and organization
 ### Organization
