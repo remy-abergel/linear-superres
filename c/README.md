@@ -339,7 +339,7 @@ imagej ../data/bridge.tif
 imagej /tmp/u0_realistic.tif /tmp/ref.tif	
 ```
 
-### Using apodization to avoid boundary artifacts (reproduce Figure 1)
+### Using apodization to avoid boundary artifacts (reproduce Figure 1 of the companion article)
 	
 The following experiment illustrates the importance of properly
 dealing with periodization artifacts induced by the periodicity of the
@@ -371,7 +371,7 @@ imagej /tmp/u0_apod.tif
 imagej /tmp/out2.tif
 ```
 
-### Super-resolution using the least-squares (reproduce Figure 7)
+### Super-resolution using the least-squares (reproduce Figure 7 of the companion article)
 
 The next experiment intents to perform super-resolution with factor 2
 along both dimensions (zx=zy=2) from a sequence containing L = 20
@@ -413,7 +413,7 @@ imagej /tmp/out.tif /tmp/dft_out.tif
 ./tiffmse -p 255 /tmp/ref_apod.tif /tmp/out.tif
 ```
 
-### Prediction of the reconstruction quality (reproduce Figure 4, 5, 6)
+### Prediction of the reconstruction quality (reproduce Figure 4, 5, 6 of the companion article)
 
 The following experiment illustrates how the reconstruction quality
 provided by the least-square estimator can be blindly (i.e. without an
@@ -768,7 +768,7 @@ done
 gnuplot -p /tmp/scatterplot.gnuplot
 ```
 
-### Influence of the displacement configuration over the quality of the reconstruction (reproduce Figure 9)
+### Influence of the displacement configuration over the quality of the reconstruction (reproduce Figure 9 of the companion article)
    
 In the next experiment, we reproduce some results similar to that
 displayed in the first row of Figure 9, showing how the displacement
@@ -819,7 +819,7 @@ imagej /tmp/out1.tif /tmp/out2.tif /tmp/out3.tif;
 ./error-prediction -p 255 -s 2 -zx 2 -zy 2 $m $n ../data/shifts_fig9c.txt
 ```
    
-### Least-squares reconstruction using erroneous displacements (reproduce Figure 10)
+### Least-squares reconstruction using erroneous displacements (reproduce Figure 10 of the companion article)
    
 In the following experiment, we perform least-squares reconstruction
 from inexact sequences of displacements, which corresponds to a
@@ -883,7 +883,7 @@ imagej /tmp/out_sig0.2.tif /tmp/dft_out_sig0.2.tif;
 imagej /tmp/out_sig0.01_zoom.tif /tmp/out_sig0.05_zoom.tif /tmp/out_sig0.1_zoom.tif /tmp/out_sig0.2_zoom.tif
 ```
 
-### Least-squares reconstruction over real data (reproduce Figure 12)
+### Least-squares reconstruction over real data (reproduce Figure 12 of the companion article)
 
 This experiments intents to perform super-resolution with factor 1.8
 along both dimensions (zx=zy=1.8) from a real-life sequence containing
@@ -921,7 +921,7 @@ imagej /tmp/first.tif /tmp/shiftandmedian.tif /tmp/leastsquares.tif
 imagej /tmp/first_dft.tif /tmp/shiftandmedian_dft.tif /tmp/leastsquares_dft.tif
 ```
 
-### IRLS & Lucky imaging (reproduce Figure 14)
+### IRLS & Lucky imaging (reproduce Figure 14 of the companion article)
 
 We reproduce here a similar experiment to that proposed in Figure 14
 of the companion article (again, the result will formally slightly
@@ -1050,7 +1050,7 @@ cat /tmp/weights.txt
 imagej /tmp/out_lucky.tif /tmp/out_lucky_dft.tif
 ```
 
-### Super-resolution and deconvolution (reproduce Figure 17)
+### Super-resolution and deconvolution (reproduce Figure 17 of the companion article)
 	
 The next experiment illustrates the benefit of applying frequency
 enhancement procedure (i.e., the sharpening filter described in
