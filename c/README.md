@@ -271,7 +271,7 @@ source files and the companion article are given below.
 | [`error-prediction.c`](src/error-prediction.c)           | `CLI` | Prediction of the super-resolution reconstruction quality                     | Section 4                                                                                         |
 | [`irls.c`](src/irls.c)                                   | `CLI` | Iteratively Reweighted Least-Squares                                          | Section 6                                                                                         |
 | [`luckyimaging.c`](src/luckyimaging.c)                   | `CLI` | Lucky-imaging procedure                                                       | Section 6                                                                                         |
-| [`sharpening.c`](src/sharpening.c)                       | `CLI` | Image sharpening using a Wiener filter                                        | Section 7                                                                                         |
+| [`sharpening.c`](src/sharpening.c)                       | `CLI` | Image sharpening using frequency amplification filter                         | Section 7                                                                                         |
 | [`remove-blackborders.c`](src/remove-blackborders.c)     | `CLI` | Crop borders caused by apodization in high-resolution images                  | Figure 6                                                                                          |
 | [`register-stack.c`](src/register-stack.c)               | `CLI` | Register a stack of TIFF images from a sequence of registration displacements | Figure 11(b) or Figure 12(b) (*shift-and-add* & *shift-and-median*)                               |
 | [`random-shifts.c`](src/random-shifts.c)                 | `CLI` | Generate a random sequence of 2D displacements (uniform distribution)         | sections 5.2 to 5.4 (simulation of random shift sequences)                                        |
@@ -293,7 +293,6 @@ source files and the companion article are given below.
 | [`tiffthre.c`](src/tiffthre.c) (*)                       | `CLI` | Threshold/normalize the pixel's gray-levels of a TIFF image                   | --                                                                                                |
 
 (*) modules adapted or inspired from the MegaWave image processing library [2].
-
 
 ### Description of the I/O source files of the package
 
@@ -637,7 +636,7 @@ N=`./tiffsize /tmp/ref_crop.tif | grep height | cut -d =  -f 2`;  # retrieve N =
 
 # set simulation parameters
 L_list="4 5 6 8 10 12 14" # values of L to be tested
-Nsimu=50; # number of simulations per value of L (in Figure 5 (a) we used Nsimu = 100)
+Nsimu=50; # number of simulations per value of L (in Figure 6 (a) we used Nsimu = 100)
 
 # set size of the low-resolution image domain
 m=`echo "$M/2" | bc -l | cut -d . -f 1` # compute m = floor(M/2) = width of the low-resolution image domain
@@ -706,7 +705,7 @@ gnuplot -p /tmp/scatterplot.gnuplot
 
 # set simulation parameters
 L_list="9 10 11 13 15 17 19" # values of L to be tested 
-Nsimu=50; # number of simulations per value of L (in Figure 5 (a) we used Nsimu = 100)
+Nsimu=50; # number of simulations per value of L (in Figure 6 (a) we used Nsimu = 100)
 
 # set size of the low-resolution image domain
 m=`echo "$M/2.1" | bc -l | cut -d . -f 1` # compute m = width of the low-resolution image domain
@@ -889,8 +888,9 @@ This experiments intents to perform super-resolution with factor 1.8
 along both dimensions (zx=zy=1.8) from a real-life sequence containing
 L = 500 thermal infrared images that we acquired by ourselves (the
 associated sequence of displacements was estimated from the
-low-resolution sequence using Keren's algorithm [3]). This experiments
-partially reproduces Figure 12 of the companion article.
+low-resolution sequence using the [Keren et
+al.](https://doi.org/10.1109/CVPR.1988.196317)) algorithm. This
+experiments partially reproduces Figure 12 of the companion article.
 
 Place yourself in the [`src`](src) directory of this package and
 run the following bash commands:
