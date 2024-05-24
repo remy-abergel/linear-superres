@@ -831,14 +831,14 @@ u0_apod = stack_apodization(u0,T,M,N);
 
 % compute the shift-and-median (i.e., the median of the registered
 % low-resolution sequence), apply bicubic zooming x1.8 and perform
-% Wiener sharpening
+% sharpening
 u0_registered = register_stack(u0_apod,T);
 out_sam = median(u0_registered,3); % shift-and-median image
 [Xq,Yq] = meshgrid(1+(0:(1.8*m-1))/1.8,1+(0:(1.8*n-1))/1.8); 
 out_sam_bicubic = interp2(out_sam,Xq,Yq,'bicubic',0); % bicubic zoom x1.8 of out_sam 
 out_sam_bicubic_sharpen = sharpening(out_sam_bicubic,@(rho)1+5*(1-exp(-rho)));
 
-% perform least-squares super-resolution & Wiener Sharpening
+% perform least-squares super-resolution & Sharpening
 uls = leastsquares_superres(u0_apod,T,M,N);
 uls_sharpen = sharpening(uls,@(rho)1+5*(1-exp(-rho))); 
 
