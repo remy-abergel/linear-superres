@@ -651,8 +651,8 @@ This experiments intents to perform super-resolution with factor 1.8
 along both dimensions (zx=zy=1.8) from a real-life sequence containing
 L = 500 thermal infrared images that we acquired by ourselves (the
 associated sequence of displacements was estimated from the
-low-resolution sequence using the [Keren et
-al.](https://doi.org/10.1109/CVPR.1988.196317)) algorithm).
+low-resolution sequence using algorithm of [Keren et
+al.](https://doi.org/10.1109/CVPR.1988.196317).
    
 Make sure you added the [`src`](src) and [`data`](../data) directories
 of this package to your MATLAB path and run the following MATLAB

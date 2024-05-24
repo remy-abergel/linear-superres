@@ -888,9 +888,9 @@ This experiments intents to perform super-resolution with factor 1.8
 along both dimensions (zx=zy=1.8) from a real-life sequence containing
 L = 500 thermal infrared images that we acquired by ourselves (the
 associated sequence of displacements was estimated from the
-low-resolution sequence using the [Keren et
-al.](https://doi.org/10.1109/CVPR.1988.196317)) algorithm. This
-experiments partially reproduces Figure 12 of the companion article.
+low-resolution sequence using the algorithm of [Keren et
+al.](https://doi.org/10.1109/CVPR.1988.196317). This experiments
+partially reproduces Figure 12 of the companion article.
 
 Place yourself in the [`src`](src) directory of this package and
 run the following bash commands:
