@@ -335,29 +335,30 @@ T20 = -5 + 10*rand(20,2);
 % display the (normalized) reconstruction error in the Fourier domain
 % and the associated map of error amplification coefficients
 
-% reproduce the first column of Figure 4 (L = 9)
+% reproduce a similar result as that displayed in the first column of Figure 4 (L = 9) 
 black_graylevel = min(ampl_L20(:)); 
 white_graylevel = max(ampl_L9(:)); 
 figure('name','(L = 9) reconstruction error (Fourier domain)'); imview(fftshift(abs(fft2(eps_prime_L9))/sqrt(M*N)),'black',black_graylevel,'white',white_graylevel,'colormap',jet(256)); 
 figure('name','(L = 9) error amplification coefficients'); imview(fftshift(ampl_L9),'black',black_graylevel,'white',white_graylevel,'colormap',jet(256));
 
-% reproduce the second column of Figure 4 (L = 14)
+% reproduce a similar result as that displayed in the second column of Figure 4 (L = 14)
 figure('name','(L = 14) reconstruction error (Fourier domain)'); imview(fftshift(abs(fft2(eps_prime_L14))/sqrt(M*N)),'black',black_graylevel,'white',white_graylevel,'colormap',jet(256)); 
 figure('name','(L = 14) error amplification coefficients'); imview(fftshift(ampl_L14),'black',black_graylevel,'white',white_graylevel,'colormap',jet(256));
 
-% reproduce the last column of Figure 4 (L = 20)
+% reproduce a similar result as that displayed in the last column of Figure 4 (L = 20)
 figure('name','(L = 20) realization of sqrt(|eps''|^2/(MN))'); imview(fftshift(abs(fft2(eps_prime_L20))/sqrt(M*N)),'black',black_graylevel,'white',white_graylevel,'colormap',jet(256)); 
 figure('name','(L = 20) error amplification coefficients'); imview(fftshift(ampl_L20),'black',black_graylevel,'white',white_graylevel,'colormap',jet(256));
 
-% display the reconstruction error in the spatial domain (reproduce
-% the first row of Figure 5)
+% display the reconstruction error in the spatial domain (reproduce 
+% a similar result as that displayed in the first row of Figure 5)
 figure('name','(L=9) reconstruction error (spatial domain)'); imview(eps_prime_L9,'black',-10,'white',10); 
 figure('name','(L=14) reconstruction error (spatial domain)'); imview(eps_prime_L14,'black',-10,'white',10); 
 figure('name','(L=20) reconstruction error (spatial domain)'); imview(eps_prime_L20,'black',-10,'white',10); 
 
 % compute and display the empirical standard deviation of the
 % reconstruction error in the spatial domain (this simulation takes
-% several minutes) to reproduce the last row of Figure 5
+% several minutes) to reproduce a similar result as that displayed 
+% in the last row of Figure 5
 Nsimu = 100; 
 eps_prime_L9 = zeros(N,M,Nsimu); 
 eps_prime_L14 = zeros(N,M,Nsimu); 
