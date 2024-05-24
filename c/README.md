@@ -3,7 +3,7 @@
 ## Installation of the C modules
 ### Dependencies
 
-This software was designed with **as less dependencies as
+This package was designed with **as less dependencies as
 possible**. Only the following libraries are required:
 
 + `libfftw3-dev`   : development packages for the FFTW library
@@ -26,7 +26,7 @@ on most systems.
 
 ### Compilation with gcc
 
-All the C modules of this software can be installed at once by
+All the C modules of this package can be installed at once by
 executing the [`SETUP_C_MODULES`](SETUP_C_MODULES) executable file
 (bash):
 
@@ -110,7 +110,7 @@ gcc -w -O3 tiffop.c tiffread.c tiffwrite.c -lm -ltiff -o tiffop
 gcc -w -O3 tiffthre.c tiffread.c tiffwrite.c -lm -ltiff -o tiffthre
 ```
 When the installation is done, you should be able to find the executable files
-listed below in the [`src`](src) directory of the software:
+listed below in the [`src`](src) directory of the package:
 
 + `simulator`
 + `stack-apodization`
@@ -199,12 +199,12 @@ Now, you may want to jump to [practical
 examples](c#examples-reproduce-several-experiments-of-the-companion-research-article)
 (and reproduce some experiments presented the companion article) or to
 have a closer look to the [source code organization and
-content](c#user-content-software-description-and-organization).
+content](c#user-content-package-description-and-organization).
 
-## Software description and organization
+## Package description and organization
 ### Organization
 
-This software is organized as follows:
+This package is organized as follows:
 
 + the [`data`](../data) directory contains some testing datasets,
 + the [`src`](src) directory contains all the source files (.c).
@@ -213,7 +213,7 @@ The source files can be separated into three categories named as
 "kernel" (`KNL`), "Input/Output" (`I/O`), or "Command Line Interface"
 (`CLI`):
 	
-+ `KNL` : those files contain all the core routines of the software,
++ `KNL` : those files contain all the core routines of the package,
 they are not interactive and do not contain any main function.
 	
 + `I/O` : those files provide routines for handling the
@@ -225,14 +225,14 @@ are in charge of the argument parsing operations and rely on the
 routines from the `KNL` and `I/O` source files for further
 operations.
 	
-Notice that several modules of this software, dedicated to basic image
+Notice that several modules of this package, dedicated to basic image
 manipulations in TIFF-Format, were mostly inspired from the MegaWave
 image processing library.
 
-### Description of the kernel source files of the software
+### Description of the kernel source files of the package
 
 We give below a synthetic description of the kernel source files of
-the software.
+the package.
 
 | SOURCE FILE                                                        | TYPE  | CONTENT / PURPOSE                                                                                        | RELATED PARTS OF THE COMPANION ARTICLE                        |
 |--------------------------------------------------------------------|-------|----------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
@@ -261,7 +261,7 @@ source files and the companion article are given below.
 | `error_prediction`     | [`error-prediction_kernel.c`](src/error-prediction_kernel.c) | compute the error amplification map A defined in Equation (41) and the predicted MSE and PSNR (46) associated to the least-squares reconstruction |
 | `sharpening`           | [`sharpening_kernel.c`](src/sharpening_kernel.c)             | apply the sharpening enhancement post-processing to a super-resolved image using (58)                                                             |
 	
-### Description of the Command line interface source files of the software
+### Description of the Command line interface source files of the package
 
 | SOURCE FILE                                              | TYPE  | CONTENT / PURPOSE                                                             | RELATED PARTS OF THE COMPANION ARTICLE                                                            |
 |----------------------------------------------------------|-------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -295,7 +295,7 @@ source files and the companion article are given below.
 (*) modules adapted or inspired from the MegaWave image processing library [2].
 
 
-### Description of the I/O source files of the software
+### Description of the I/O source files of the package
 
 | SOURCE FILE                                    | TYPE  | CONTENT / PURPOSE                                                                                                   |
 |------------------------------------------------|-------|---------------------------------------------------------------------------------------------------------------------|
@@ -312,7 +312,7 @@ We illustrate a procedure for synthetizing realistic sequences of
 low-resolution images from a given high-resolution image and a
 sequence of displacements.
 	
-Place yourself in the [`src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this package and
 run the following bash commands:
 
 ```bash
@@ -346,7 +346,7 @@ dealing with periodization artifacts induced by the periodicity of the
 Shannon interpolate when computing a super-resolved image using the
 leastsquare-superres module.
 
-Place yourself in the [`src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this package and
 run the following commands:
 
 ```bash
@@ -378,7 +378,7 @@ along both dimensions (zx=zy=2) from a sequence containing L = 20
 noisy low-resolution images, with no perturbation on the
 displacements.
 
-Place yourself in the [`src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this package and
 run the following bash commands:
 
 ```bash
@@ -431,7 +431,7 @@ afterwards (because, by construction, the apodization filter vanishes
 where the periodic-like artifact occur in the non-realistic simulated
 sequence).
 	
-Place yourself in the [`src`](src) directory of this software and run
+Place yourself in the [`src`](src) directory of this package and run
 the following bash commands:
 
 ```bash
@@ -775,8 +775,8 @@ displayed in the first row of Figure 9, showing how the displacement
 configuration may affect the quality reconstruction (especially when L
 is close to zx*zy).
 
-Place yourself in the [`src`](src) directory of this software and
-run the following bash commands:
+Place yourself in the [`src`](src) directory of this package and run
+the following bash commands:
 
 ```bash
 # compute three sequences containing 4 low-resolution images using the
@@ -825,7 +825,7 @@ In the following experiment, we perform least-squares reconstruction
 from inexact sequences of displacements, which corresponds to a
 similar experiment as that displayed in Figure 10.
    
-Place yourself in the [`src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this package and
 run the following bash commands:
 
 ```bash
@@ -892,7 +892,7 @@ associated sequence of displacements was estimated from the
 low-resolution sequence using Keren's algorithm [3]). This experiments
 partially reproduces Figure 12 of the companion article.
 
-Place yourself in the [`src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this package and
 run the following bash commands:
 
 ```bash
@@ -930,7 +930,7 @@ parameters). This experiment illustrates how the lucky-imaging
 procedure can be used to remove outliers from the initial sequence in
 order to improve the reconstruction quality.
 
-Place yourself in the [`src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this package and
 run the following bash commands:
    
 ```bash
@@ -1059,7 +1059,7 @@ super-resolution reconstruction process over a real data sequence (the
 FLIR T640 thermal infrared image sequence). This experiments
 reproduces Figure 17 of the companion article.
 	
-Place yourself in the [`src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this package and
 run the following bash commands
 
 ```bash
