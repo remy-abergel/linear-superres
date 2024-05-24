@@ -6,8 +6,8 @@ Simply add the [src](src) directory of this MATLAB pachage to your
 MATLAB path. All provided modules will be immediately available from
 your MATLAB console (**no compilation/mex-interfacing needed**).
 
-From the MATLAB console, type help + "*name of the module*" to display
-a short documentation of a provided module, for instance typing
+From the MATLAB console, use the `help` command to display the
+documentation related to each provided module, for instance typing
 
 ```matlab
 help leastsquares_superres
