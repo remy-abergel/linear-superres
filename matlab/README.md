@@ -75,9 +75,10 @@ have a closer look to the [modules contained into this package](#modules-descrip
   The modules [`compute_blockmatrix`](src/compute_blockmatrix.m) and
   [`leastsquares_superres`](src/leastsquares_superres.m) come with an
   optional `weight` input that slighlty generalizes the corresponding
-  pseudocodes (Algorithm 1 and Algorithm 2) described in the companion
-  article. This optional input is used inside the [`irls`](src/irls.m)
-  module (see the explanations in Section 6 of the companion paper).
+  pseudocodes algorithms described in the companion article (Algorithm
+  1 and Algorithm 2). This optional input is used inside the
+  [`irls`](src/irls.m) module (see the explanations in Section 6 of
+  the companion paper).
 
 ## Examples (reproduce several experiments of the companion article)
 ### Simulate realistic low-resolution sequences
