@@ -78,7 +78,7 @@ in the standard output:
 
 Notice that you can also manually compile each module using gcc (the
 compilation commands can be adapted to other C-compilers). To that
-aim, place yourself into the [`c/src`](src) directory, and run the
+aim, place yourself into the [`src`](src) directory, and run the
 following commands:
 
 ```bash
@@ -110,7 +110,7 @@ gcc -w -O3 tiffop.c tiffread.c tiffwrite.c -lm -ltiff -o tiffop
 gcc -w -O3 tiffthre.c tiffread.c tiffwrite.c -lm -ltiff -o tiffthre
 ```
 When the installation is done, you should be able to find the executable files
-listed below in the [`c/src`](src) directory of the software:
+listed below in the [`src`](src) directory of the software:
 
 + `simulator`
 + `stack-apodization`
@@ -143,7 +143,7 @@ listed below in the [`c/src`](src) directory of the software:
    
 You can check the usage and see a (short) documentation of each module
 by running the corresponding executable file without argument. For
-instance, if you place yourself in the [`c/src`](src), the following
+instance, if you place yourself in the [`src`](src), the following
 instruction
 
 ```bash
@@ -196,8 +196,8 @@ Of course, the installation of ImageJ and Gnuplot is not mandatory
 interface).
 
 Now, you may want to jump to [practical examples and reproduce some
-experiments presented in our
-paper](c#user-content-examples-reproduce-several-experiments-of-our-publication)
+experiments presented the companion
+article](c#user-content-examples-reproduce-several-experiments-of-our-publication)
 or to have a closer look to the [source code organization and
 content](c#user-content-software-description-and-organization).
 
@@ -207,7 +207,7 @@ content](c#user-content-software-description-and-organization).
 This software is organized as follows:
 
 + the [`data`](../data) directory contains some testing datasets,
-+ the [`c/src`](src) directory contains all the source files (.c).
++ the [`src`](src) directory contains all the source files (.c).
 
 The source files can be separated into three categories named as
 "kernel" (`KNL`), "Input/Output" (`I/O`), or "Command Line Interface"
@@ -305,14 +305,14 @@ source files and the companion article are given below.
 | [`tiffwritecomplex.c`](src/tiffwritecomplex.c) | `I/O` | complex variant of tiffwrite.c (write as a TIFF image the real part of the `fftw_complex` graylevels)               |
 | [`ascii.c`](src/ascii.c)                       | `I/O` | routines dedicated to manipulation of files in ASCII format                                                         |
 
-## Examples (reproduce several experiments of our publication)
+## Examples (reproduce several experiments of the companion research article)
 ### Simulate realistic low-resolution sequences
 
 We illustrate a procedure for synthetizing realistic sequences of
 low-resolution images from a given high-resolution image and a
 sequence of displacements.
 	
-Place yourself in the [`c/src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this software and
 run the following bash commands:
 
 ```bash
@@ -346,7 +346,7 @@ dealing with periodization artifacts induced by the periodicity of the
 Shannon interpolate when computing a super-resolved image using the
 leastsquare-superres module.
 
-Place yourself in the [`c/src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this software and
 run the following commands:
 
 ```bash
@@ -378,7 +378,7 @@ along both dimensions (zx=zy=2) from a sequence containing L = 20
 noisy low-resolution images, with no perturbation on the
 displacements.
 
-Place yourself in the [`c/src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this software and
 run the following bash commands:
 
 ```bash
@@ -431,7 +431,7 @@ afterwards (because, by construction, the apodization filter vanishes
 where the periodic-like artifact occur in the non-realistic simulated
 sequence).
 	
-Place yourself in the [`c/src`](src) directory of this software and run
+Place yourself in the [`src`](src) directory of this software and run
 the following bash commands:
 
 ```bash
@@ -775,7 +775,7 @@ displayed in the first row of Figure 9, showing how the displacement
 configuration may affect the quality reconstruction (especially when L
 is close to zx*zy).
 
-Place yourself in the [`c/src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this software and
 run the following bash commands:
 
 ```bash
@@ -825,7 +825,7 @@ In the following experiment, we perform least-squares reconstruction
 from inexact sequences of displacements, which corresponds to a
 similar experiment as that displayed in Figure 10.
    
-Place yourself in the [`c/src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this software and
 run the following bash commands:
 
 ```bash
@@ -892,7 +892,7 @@ associated sequence of displacements was estimated from the
 low-resolution sequence using Keren's algorithm [3]). This experiments
 partially reproduces Figure 12 of the companion article.
 
-Place yourself in the [`c/src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this software and
 run the following bash commands:
 
 ```bash
@@ -930,7 +930,7 @@ parameters). This experiment illustrates how the lucky-imaging
 procedure can be used to remove outliers from the initial sequence in
 order to improve the reconstruction quality.
 
-Place yourself in the [`c/src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this software and
 run the following bash commands:
    
 ```bash
@@ -1059,7 +1059,7 @@ super-resolution reconstruction process over a real data sequence (the
 FLIR T640 thermal infrared image sequence). This experiments
 reproduces Figure 17 of the companion article.
 	
-Place yourself in the [`c/src`](src) directory of this software and
+Place yourself in the [`src`](src) directory of this software and
 run the following bash commands
 
 ```bash
