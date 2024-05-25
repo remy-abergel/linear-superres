@@ -4,7 +4,7 @@
 
 This software focuses on the problem of computing a single
 super-resolved image from multiple shifted images of the same scene.
-	
+
 It is made of two **independent packages**, one implemented in C, and
 the other in Matlab, stored in the two following directories:
 
@@ -18,7 +18,7 @@ independently.
 
 The algorithms contained in this software are described in the
 following research paper:
-	
+
 Rémy Abergel, Andrés Almansa, Lionel Moisan and Camille Noûs, "Linear
 Super-Resolution Through Translational Motion", Preprint HAL
 [hal_link](https://hal.sciences/xxxxxxx).
@@ -26,12 +26,8 @@ Super-Resolution Through Translational Motion", Preprint HAL
 This work was submitted to the Image Processing On Line (IPOL) Journal
 and is currently under review.
 
-## License
-
-TODO 
-
 ## Contact
-   
+
 This work was done at [Université Paris Cité](https://u-paris.fr/),
 [Laboratoire MAP5 (CNRS UMR
 8145)](https://map5.mi.parisdescartes.fr/), 45 rue des Saints-Pères
@@ -46,4 +42,3 @@ code, don't hesitate to email at
 
 Also, if you find this code useful, we would be delighted to now about
 what application you are using it for.
-  

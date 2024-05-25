@@ -687,7 +687,7 @@ out_shiftandmedian = median(u0_registered,3);
 uls = leastsquares_superres(u0_apod,T,M,N);
 
 % display and compare those three images (reproduce the first row of Figure 12)
-figure('Name','low-resolution image u0_apod(:,:,1)'); imview(u0_apod(:,:,1),'black',20,'white',140);
+figure('Name','low-resolution image u0_apod(:,:,1)'); imview(u0_apod(:,:,1),'black',20,'white',140,'scale',2);
 figure('Name','shift-and-median'); imview(out_shiftandmedian,'black',20,'white',140);
 figure('Name','least-squares reconstruction uls'); imview(uls,'black',20,'white',140);
 
@@ -748,7 +748,8 @@ M = 2*m; N = 2*n;
 u0_apod = stack_apodization(u0_noisy,T,M,N);
 uls = leastsquares_superres(u0_apod,T,M,N);
 
-% display reconstruction (reproduce first row of Figure 14)
+% display reconstruction (reproduce first row of Figure 14, display the whole 
+% images instead of cropping areas)
 figure('Name','least-squares reconstruction'); imview(uls,'black',0,'white',255);
 figure('Name','least-squares reconstruction (Shannon zoom x3)'); imview(shannon_zooming(uls,3*M,3*N),'black',0,'white',255);
 figure('Name','least-squares reconstruction (Fourier spectrum)'); imview(log(1+abs(fftshift(fft2(uls)))),'black',16,'white',1);
@@ -757,7 +758,8 @@ figure('Name','least-squares reconstruction (Fourier spectrum)'); imview(log(1+a
 [ul1l2,weights,El1l2] = irls(u0_apod,T,M,N,'verbose',true);
 figure(); plot(El1l2); xlabel('IRLS iterations'); ylabel('l1-l2 energy'); title('Energy decrease');
 
-% display l1-l2 energy minimizer (reproduce second row of Figure 14)
+% display l1-l2 energy minimizer (reproduce second row of Figure 14, display 
+% the whole images instead of cropping areas)
 figure('Name','l1-l2 reconstruction'); imview(ul1l2,'black',0,'white',255);
 figure('Name','l1-l2 reconstruction (Shannon zoom x3)'); imview(shannon_zooming(ul1l2,3*M,3*N),'black',0,'white',255);
 figure('Name','l1-l2 reconstruction (Fourier spectrum)'); imview(log(1+abs(fftshift(fft2(ul1l2)))),'black',16,'white',1);
@@ -780,7 +782,8 @@ ulucky = leastsquares_superres(u0_apod(:,:,I(7:end)),T(I(7:end),:),M,N); % u_luc
 % the same output)
 ulucky = luckyimaging(u0_apod,T,M,N,weights,14); % u_lucky^{14} : image obtained using L-6 = 14 images from the input low-resolution sequence
 
-% display lucky-imaging result (reproduce last row of Figure 14)
+% display lucky-imaging result (reproduce last row of Figure 14, display 
+% the whole images instead of cropping areas)
 figure('Name','lucky reconstruction'); imview(ulucky,'black',0,'white',255);
 figure('Name','lucky reconstruction (Shannon zoom x3)'); imview(shannon_zooming(ulucky,3*M,3*N),'black',0,'white',255);
 figure('Name','lucky reconstruction (Fourier spectrum)'); imview(log(1+abs(fftshift(fft2(ulucky)))),'black',16,'white',1);
@@ -839,6 +842,13 @@ for id = 1:3186
 end
 T = dlmread('shifts_2photons.txt');
 
+% display the low-resolution sequence: we use the 'scale' 
+% parameter of the mview module to upscale the sequence 
+% (using nearest-neighbor zoom) with a factor 10 to improve 
+% the display
+z = 10;
+mview(u0, 'scale', z); % set z=1 to disable upscaling
+
 % set width and height of the reconstruction (high-resolution) domain
 [n,m,L] = size(u0);
 M = 2*m; % width of the high-resolution domain (super-resolution factor zx = 2)
@@ -872,11 +882,23 @@ figure('Name',sprintf('low-resolution image u0_apod(:,:,%d)',id)); imview(u0_apo
 figure('Name',sprintf('shift-and-add image',id)); imview(out_shiftandadd,'black',0,'white',140);
 figure('Name',sprintf('super-resolved image (lucky)',id)); imview(ulucky,'black',0,'white',140);
 
+% same using upscaling to improve the display (display the low-resolution 
+% images using factor 10 upscaling and the super-resolved using a 
+% factor 5 upscaling so that the displayed image have the same size (but 
+% not the same size))
+figure('Name',sprintf('low-resolution image u0_apod(:,:,%d) (x10 scale)',id)); imview(u0_apod(:,:,id),'black',0,'white',140,'scale',10);
+figure('Name',sprintf('shift-and-add image (x10 scale)',id)); imview(out_shiftandadd,'black',0,'white',140,'scale',10);
+figure('Name',sprintf('super-resolved image (lucky) (x5 scale)',id)); imview(ulucky,'black',0,'white',140,'scale',5);
+
 % compare the super-resolved images reconstructed with of without 
 % lucky imaging strategy (reproduce the two first columns of 
 % Figure 15 of the companion article)
 figure('Name',sprintf('super-resolved image (no lucky)',id)); imview(uls,'black',0,'white',140);
 figure('Name',sprintf('super-resolved image (lucky)',id)); imview(ulucky,'black',0,'white',140);
+
+% same using x5 upscaling for both high resolution images 
+figure('Name',sprintf('super-resolved image (no lucky)',id)); imview(uls,'black',0,'white',140,'scale',5);
+figure('Name',sprintf('super-resolved image (lucky)',id)); imview(ulucky,'black',0,'white',140,'scale',5);
 
 ```
 
@@ -929,8 +951,8 @@ figure('Name','(out_sam) bicubic zoom x 1.8 + sharpening'); imview(out_sam_bicub
 figure('Name','(uls) sharpening'); imview(uls_sharpen,'black',20,'white',140); 
 
 % compare close-up views of high-resolution images (out_sam_bicubic_sharpen, uls and uls_sharpen)
-display_factor = 3; 
-figure('Name','(out_sam) bicubic zoom x 1.8 + sharpening'); imview(kron(out_sam_bicubic_sharpen,ones(display_factor)),'black',20,'white',140); 
-figure('Name','uls'); imview(kron(uls,ones(display_factor)),'black',20,'white',140); 
-figure('Name','uls + sharpening'); imview(kron(uls_sharpen,ones(display_factor)),'black',20,'white',140); 
+display_factor = 2; 
+figure('Name','(out_sam) bicubic zoom x 1.8 + sharpening'); imview(out_sam_bicubic_sharpen,'black',20,'white',140,'scale',display_factor); 
+figure('Name','uls'); imview(uls,'black',20,'white',140,'scale',display_factor); 
+figure('Name','uls + sharpening'); imview(uls_sharpen,'black',20,'white',140,'scale',display_factor); 
 ```
