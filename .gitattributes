@@ -1,1 +1,1 @@
-*.m linguist-vendored=False
+matlab/src/*.m linguist-vendored=False
