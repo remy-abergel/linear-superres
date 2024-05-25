@@ -1,2 +1,2 @@
-matlab/*.m linguist-language=matlab
-c/*.c linguist-language=c
+matlab/src/*.m linguist-language=matlab
+c/src/*.c linguist-language=c
