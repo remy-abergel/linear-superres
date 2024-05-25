@@ -1,2 +1,1 @@
-matlab/src/*.m linguist-language=Matlab
-c/src/*.c linguist-language=C
+*.m linguist-vendored=False
