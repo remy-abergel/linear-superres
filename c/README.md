@@ -882,7 +882,7 @@ imagej /tmp/out_sig0.2.tif /tmp/dft_out_sig0.2.tif;
 imagej /tmp/out_sig0.01_zoom.tif /tmp/out_sig0.05_zoom.tif /tmp/out_sig0.1_zoom.tif /tmp/out_sig0.2_zoom.tif
 ```
 
-### Least-squares reconstruction over real data (reproduce Figure 12 of the companion article)
+### Least-squares reconstruction over real thermal infrared data (reproduce Figure 12 of the companion article)
 
 This experiments intents to perform super-resolution with factor 1.8
 along both dimensions (zx=zy=1.8) from a real-life sequence containing
@@ -1048,6 +1048,64 @@ cat /tmp/weights.txt
 # frames from 1 to 11).
 ./tiffdft -l /tmp/out_lucky_dft.tif /tmp/out_lucky.tif
 imagej /tmp/out_lucky.tif /tmp/out_lucky_dft.tif
+```
+
+### Least-squares reconstruction over real microscopy data (reproduce Figure 11 and 15 of the companion article)
+
+The dataset used in the following experiments corresponds to an
+in-vivo recording of Purkinje cells of a living rat, which was
+acquired with a 2-photons microscope. This sequence was kindly
+provided to us by [Jorge Enrique
+Ramírez-Buriticá](https://scholar.google.com/citations?user=cQFpBPQAAAAJ&hl=es)
+and [Brandon
+Stell](https://scholar.google.com/citations?user=WLggr90AAAAJ&hl=es),
+who performed this challenging video acquisition in order to study the
+temporal spiking activity of in-vivo brain cells. Achieving a
+satisfactory temporal sampling (FPS) rate for this sequence
+constrained the spatial sampling rate to be set large (4 micrometer
+per pixel), leading to strongly aliased images.
+
+The original sequence contains 3921 images with size 45 x 75 each. We
+register this sequence using the algorithm of [Keren et
+al.](https://doi.org/10.1109/CVPR.1988.196317). We removed 35 images
+from the original sequence which were associated with to large
+displacement (>20 micrometer) in order to keep a large-enough field
+of view for the super-resolved image to reconstruct. This leads to the
+sequence of 3186 images shared [XXX here XXX](XXX).
+
+In the following, we partially reproduce the experiment presented in
+Figure 11 and Figure 15 of the companion article.
+
+Place yourself in the [`src`](src) directory of this package and
+run the following bash commands:
+
+```bash
+# apodize the low-resolution sequence
+./stack-apodization -s 0.5 -zx 2 -zy 2 -a /tmp/u0_apod.tif ../../data/2photons.tif ../../data/shifts_2photons.txt
+
+# extract the first image of the apodized low-resolution sequence
+./tiffextract -i0 0 -i1 0 -r /tmp/u0_apod.tif /tmp/first.tif 0 0 45 75
+
+# perform least-squares super-resolution of the whole apodized 
+# low-resolution sequence (3186 images)
+./leastsquares-superres -zx 2 -zy 2 /tmp/u0_apod.tif ../../data/shifts_2photons.txt /tmp/out_leastsquares.tif
+
+# apply the lucky-imaging strategy (eliminate 300 images from the
+# input low-resolution sequence)
+./irls -zx 2 -zy 2 -w /tmp/weights.txt /tmp/u0_apod.tif ../../data/shifts_2photons.txt /tmp/out_irls.tif
+./luckyimaging -zx 2 -zy 2 -n 2886 -v /tmp/u0_apod.tif ../../data/shifts_2photons.txt /tmp/weights.txt /tmp/out_lucky.tif
+
+# display the first frame of the apodized low-resolution sequence 
+# and the super-resolved image obtained using the lucky-imaging 
+# strategy  (corresponds to the images displayed in first row and 
+# columns 1 and 3, of the companion article)
+imagej /tmp/first.tif /tmp/out_lucky.tif
+
+# compare the super-resolved image reconstructed using the whole 
+# sequence (first column in Figure 15) to the super-resolved image 
+# reconstructed using the lucky-imaging strategy (second column of 
+# Figure 15)
+imagej /tmp/out_leastsquares.tif /tmp/out_lucky.tif
 ```
 
 ### Super-resolution and deconvolution (reproduce Figure 17 of the companion article)
