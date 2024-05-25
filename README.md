@@ -23,8 +23,7 @@ Rémy Abergel, Andrés Almansa, Lionel Moisan and Camille Noûs, "Linear
 Super-Resolution Through Translational Motion", Preprint HAL
 [hal_link](https://hal.sciences/xxxxxxx).
 
-This work was submitted to the Image Processing On Line (IPOL) Journal
-and is currently under review.
+This work was submitted to the [Image Processing On Line (IPOL)](https://www.ipol.im/) Journal and is currently under review.
 
 ## Contact
 
