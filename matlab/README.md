@@ -626,10 +626,10 @@ figure('Name','reconstruction (sigma_delta = 0.2)'); imview(uls4,'black',0,'whit
 
 % display details (close-up views x5)
 X0=324; Y0=84; X1=408; Y1=144;
-figure('Name','close-up view x5 (sigma_delta = 0.01)'); imview(kron(uls1(1+(Y0:Y1),1+(X0:X1)),ones(5,5))); 
-figure('Name','close-up view x5 (sigma_delta = 0.05)'); imview(kron(uls2(1+(Y0:Y1),1+(X0:X1)),ones(5,5))); 
-figure('Name','close-up view x5 (sigma_delta = 0.1)'); imview(kron(uls3(1+(Y0:Y1),1+(X0:X1)),ones(5,5))); 
-figure('Name','close-up view x5 (sigma_delta = 0.2)'); imview(kron(uls4(1+(Y0:Y1),1+(X0:X1)),ones(5,5))); 
+figure('Name','close-up view x5 (sigma_delta = 0.01)'); imview(uls1(1+(Y0:Y1),1+(X0:X1)),'scale',5); 
+figure('Name','close-up view x5 (sigma_delta = 0.05)'); imview(uls2(1+(Y0:Y1),1+(X0:X1)),'scale',5); 
+figure('Name','close-up view x5 (sigma_delta = 0.1)'); imview(uls3(1+(Y0:Y1),1+(X0:X1)),'scale',5); 
+figure('Name','close-up view x5 (sigma_delta = 0.2)'); imview(uls4(1+(Y0:Y1),1+(X0:X1)),'scale',5); 
 
 % perform shannon resamplings (zoom x5)
 uls1_zoom = shannon_zooming(uls1,5*M,5*N); 
