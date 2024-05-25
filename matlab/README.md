@@ -648,7 +648,7 @@ figure('Name','Fourier spectrum (sigma_delta = 0.1)'); imview(log(1+abs(fftshift
 figure('Name','Fourier spectrum (sigma_delta = 0.2)'); imview(log(1+abs(fftshift(fft2(uls4)))),'black',16,'white',1); 
 ```
 
-### Least-squares reconstruction over real data (reproduce Figure 12 of the companion article)
+### Least-squares reconstruction over real thermal infrared data (reproduce Figure 12 of the companion article)
 
 This experiments intents to perform super-resolution with factor 1.8
 along both dimensions (zx=zy=1.8) from a real-life sequence containing
@@ -798,6 +798,86 @@ for Nsuppr = 0:L-4
 end
 figure(); mview(ulucky_mov,'black',0,'white',255); % display movie in the spatial domain
 figure(); mview(log(1+abs(fftshift(fftshift(fft2(ulucky_mov),1),2))),'black',16,'white',1); % display movie in the Fourier domain
+```
+
+### Least-squares reconstruction over real microscopy data (reproduce Figure 11 and 15 of the companion article)
+
+The dataset used in the following experiments corresponds to an
+in-vivo recording of Purkinje cells of a living rat, which was
+acquired with a 2-photons microscope. This sequence was kindly
+provided to us by [Jorge Enrique
+Ramírez-Buriticá](https://scholar.google.com/citations?user=cQFpBPQAAAAJ&hl=es)
+and [Brandon
+Stell](https://scholar.google.com/citations?user=WLggr90AAAAJ&hl=es),
+who performed this challenging video acquisition in order to study the
+temporal spiking activity of in-vivo brain cells. Achieving a
+satisfactory temporal sampling (FPS) rate for this sequence
+constrained the spatial sampling rate to be set large (4 micrometer
+per pixel), leading to strongly aliased images.
+
+The original sequence contains 3921 images with size 45 x 75 each. We
+register this sequence using the [Keren et
+al.](https://doi.org/10.1109/CVPR.1988.196317) algorithm. We removed
+35 images from the original sequence which were associated with to
+large displacement (>20 micrometer) in order to keep a large-enough
+field of view for the super-resolved image to reconstruct. This leads
+to the sequence of 3186 images shared [XXX here XXX](XXX).
+
+In the following, we partially reproduce the experiment presented in
+Figure 11 and Figure 15 of the companion article.
+
+Make sure you added the [`src`](src) and [`data`](../data) directories
+of this package to your MATLAB path and run the following MATLAB
+commands:
+
+```matlab
+% load the 2-photons sequence and the estimated sequence of
+% displacements
+u0 = zeros(75, 45, 3186); 
+for id = 1:3186
+	u0(:,:,id) = double(imread('2photons.tif', id));
+end
+T = dlmread('shifts_2photons.txt');
+
+% set width and height of the reconstruction (high-resolution) domain
+[n,m,L] = size(u0);
+M = 2*m; % width of the high-resolution domain (super-resolution factor zx = 2)
+N = 2*n; % height of the high-resolution domain (super-resolution factor zy = 2)
+
+% apodize the FLIR sequence to avoid edge effects in the 
+% reconstruction
+u0_apod = stack_apodization(u0,T,M,N,'sigma',0.5);
+
+% compute the shift-and-add (i.e., the temporal of the registered
+% low-resolution sequence)
+u0_registered = register_stack(u0_apod,T);
+out_shiftandadd = mean(u0_registered,3);
+
+% perform least-squares super-resolution using the whole sequence
+uls = leastsquares_superres(u0_apod,T,M,N);
+
+% perform least-squares super-resolution using the lucky-imaging 
+% strategy
+[ul1l2,weights,El1l2] = irls(u0_apod,T,M,N,'verbose',true);
+ulucky = luckyimaging(u0_apod,T,M,N,weights,L-300); % u_lucky^{2886} : image obtained using L-300 = 2886 images from the input low-resolution sequence
+
+% compare one low-resolution image (the closest to out_shiftandadd 
+% in l2 distance) of the apodized sequence, the shift-and-add image,
+% and the super-resolved image obtained using the lucky-imaging 
+% strategy (reproduce first row of Figure 11 of the companion 
+% article)
+zz = reshape(sum((u0_apod - repmat(out_shiftandadd,[1,1,L])).^2,[1,2]),[L,1]);
+id = find(zz == min(zz));
+figure('Name',sprintf('low-resolution image u0_apod(:,:,%d)',id)); imview(u0_apod(:,:,id),'black',0,'white',140);
+figure('Name',sprintf('shift-and-add image',id)); imview(out_shiftandadd,'black',0,'white',140);
+figure('Name',sprintf('super-resolved image (lucky)',id)); imview(ulucky,'black',0,'white',140);
+
+% compare the super-resolved images reconstructed with of without 
+% lucky imaging strategy (reproduce the two first columns of 
+% Figure 15 of the companion article)
+figure('Name',sprintf('super-resolved image (no lucky)',id)); imview(uls,'black',0,'white',140);
+figure('Name',sprintf('super-resolved image (lucky)',id)); imview(ulucky,'black',0,'white',140);
+
 ```
 
 ### Super-resolution and deconvolution (reproduce Figure 17 of the companion article)
