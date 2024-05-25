@@ -50,7 +50,32 @@ m = p.Results.black;
 M = p.Results.white; 
 cmap = p.Results.colormap; 
 
-%% consistency checks (TODO)
+%% consistency checks
+% input u (2D matrix of double real numbers)
+if(~isreal(u) || numel(size(u)) ~= 2)
+    help imview;
+    error('input ''u'' must be a 2D array of double real numbers');
+end
+% input z (real scalar number > 0, no decimal part)
+if(~isreal(z) || ~isscalar(z) || z ~= floor(z) || z <= 0)
+    help imview;
+    error('optional input ''z'' must be a positive real scalar number, without decimal part (z == floor(z))');
+end
+% input b (real scalar number)
+if(~isreal(m) || ~isscalar(m))
+    help imview;
+    error('optional input ''b'' must be a real scalar number');
+end
+% input w (real scalar number)
+if(~isreal(M) || ~isscalar(M))
+    help imview;
+    error('optional input ''w'' must be a real scalar number');
+end
+% input cmap (2D array with 3 columns, containing real numbers in [0,1])
+if(~isreal(cmap) || numel(size(cmap)) ~= 2 || size(cmap,2) ~= 3 || min(cmap(:)) < 0 || max(cmap(:)) > 1)
+    help imview;
+    error('optional input ''cmap'' must be a 2D array with three columns and values in [0,1]');
+end
 
 %% local functions (event handlers)
 
