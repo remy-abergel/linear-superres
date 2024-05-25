@@ -1066,12 +1066,12 @@ constrained the spatial sampling rate to be set large (4 micrometer
 per pixel), leading to strongly aliased images.
 
 The original sequence contains 3921 images with size 45 x 75 each. We
-register this sequence using the algorithm of [Keren et
-al.](https://doi.org/10.1109/CVPR.1988.196317). We removed 35 images
-from the original sequence which were associated with to large
-displacement (>20 micrometer) in order to keep a large-enough field
-of view for the super-resolved image to reconstruct. This leads to the
-sequence of 3186 images shared [XXX here XXX](XXX).
+register this sequence using the [Keren et
+al.](https://doi.org/10.1109/CVPR.1988.196317) algorithm. We removed
+35 images from the original sequence which were associated with to
+large displacement (>20 micrometer) in order to keep a large-enough
+field of view for the super-resolved image to reconstruct. This leads
+to the sequence of 3186 images shared [XXX here XXX](XXX).
 
 In the following, we partially reproduce the experiment presented in
 Figure 11 and Figure 15 of the companion article.
