@@ -33,11 +33,7 @@ This work was done at [Université Paris Cité](https://u-paris.fr/),
 75270 Paris Cedex 06, FRANCE.
 
 If you have any comments, questions, or suggestions regarding this
-code, don't hesitate to email at
-
-+ [Remy.Abergel@u-paris.fr](mailto:Remy.Abergel@u-paris.fr)
-+ [Andres.Almansa@u-paris.fr](mailto:Andres.Almansa@u-paris.fr)
-+ [Lionel.Moisan@u-paris.fr](mailto:Lionel.Moisan@u-paris.fr)
-
-Also, if you find this code useful, we would be delighted to now about
-what application you are using it for.
+code, don't hesitate to reach us by opening a
+[discussion](discussions) or a [bug issue](issues). Also, if you find
+this code useful, we would be delighted to now about what application
+you are using it for.
