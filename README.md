@@ -34,6 +34,8 @@ This work was done at [Université Paris Cité](https://u-paris.fr/),
 
 If you have any comments, questions, or suggestions regarding this
 code, don't hesitate to reach us by opening a
-[discussion](discussions) or a [bug issue](issues). Also, if you find
-this code useful, we would be delighted to now about what application
-you are using it for.
+[discussion](https://github.com/remy-abergel/linear-superres/discussions)
+or a [bug
+issue](https://github.com/remy-abergel/linear-superres/issues). Also,
+if you find this code useful, we would be delighted to now about what
+application you are using it for.
