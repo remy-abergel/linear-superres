@@ -13,6 +13,8 @@ mentions
 
 ## Flir T640 sequence
 
+![FlirT640 sequence (first frame)](flirT640.tif)
+
 This sequence was acquired by Lionel Moisan using a FLIR T640 camera.
 
 ## Cell sequence
