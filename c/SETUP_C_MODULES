@@ -1,0 +1,102 @@
+#!/bin/bash
+thispath=`dirname $0`
+cd $thispath/src;
+
+CC="gcc -w -O3" # compiler + options
+
+RED='\033[0;31m' # red color for printf
+GREEN='\033[0;32m' # green color for printf
+NC='\033[0m' # no Color
+
+echo ""
+echo "****************************************************************"
+echo "*                     compile main modules                     *"
+echo "****************************************************************"
+echo ""
+
+$CC simulator.c operators_kernel.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -lm -ltiff -lfftw3 -o simulator
+if [ "$?" = "0" ]; then printf "  + compilation of module 'simulator': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'simulator': ${RED}failure${NC}\n"; fi
+
+$CC stack-apodization.c apodization_kernel.c tiffread.c tiffwrite.c ascii.c -lm -ltiff -o stack-apodization
+if [ "$?" = "0" ]; then printf "  + compilation of module 'stack-apodization': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'stack-apodization': ${RED}failure${NC}\n"; fi
+
+$CC remove-blackborders.c remove-blackborders_kernel.c tiffread.c tiffwrite.c ascii.c -lm -ltiff -o remove-blackborders
+if [ "$?" = "0" ]; then printf "  + compilation of module 'remove-blackborders': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'remove-blackborders': ${RED}failure${NC}\n"; fi
+
+$CC leastsquares-superres.c leastsquares_kernel.c operators_kernel.c blockmatrix_kernel.c tiffreadcomplex.c tiffwritecomplex.c tiffwrite.c ascii.c -llapacke -lm -ltiff -lfftw3 -o leastsquares-superres
+if [ "$?" = "0" ]; then printf "  + compilation of module 'leastsquares-superres': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'leastsquares-superres': ${RED}failure${NC}\n"; fi
+
+$CC error-prediction.c error-prediction_kernel.c ascii.c blockmatrix_kernel.c tiffwrite.c -llapacke -lm -ltiff -o error-prediction
+if [ "$?" = "0" ]; then printf "  + compilation of module 'error-prediction': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'error-prediction': ${RED}failure${NC}\n"; fi
+
+$CC irls.c leastsquares_kernel.c operators_kernel.c blockmatrix_kernel.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -llapacke -lm -ltiff -lfftw3 -o irls
+if [ "$?" = "0" ]; then printf "  + compilation of module 'irls': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'irls': ${RED}failure${NC}\n"; fi
+
+$CC luckyimaging.c leastsquares_kernel.c operators_kernel.c blockmatrix_kernel.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -llapacke -lm -ltiff -lfftw3 -o luckyimaging
+if [ "$?" = "0" ]; then printf "  + compilation of module 'luckyimaging': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'luckyimaging': ${RED}failure${NC}\n"; fi
+
+$CC sharpening.c sharpening_kernel.c tiffread.c tiffwrite.c -lm -ltiff -lfftw3 -o sharpening
+if [ "$?" = "0" ]; then printf "  + compilation of module 'sharpening': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'sharpening': ${RED}failure${NC}\n"; fi
+
+
+echo ""
+echo "****************************************************************"
+echo "*   compile secondary modules (tools for image manipulation)   *"
+echo "****************************************************************"
+echo ""
+
+$CC register-stack.c tools_kernel.c tiffread.c tiffwrite.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -lm -ltiff -lfftw3 -o register-stack
+if [ "$?" = "0" ]; then printf "  + compilation of module 'register-stack': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'register-stack': ${RED}failure${NC}\n"; fi
+
+$CC random-shifts.c -o random-shifts
+if [ "$?" = "0" ]; then printf "  + compilation of module 'random-shifts': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'random-shifts': ${RED}failure${NC}\n"; fi
+
+$CC shifts-noise.c ascii.c -lm -o shifts-noise
+if [ "$?" = "0" ]; then printf "  + compilation of module 'shifts-noise': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'shifts-noise': ${RED}failure${NC}\n"; fi
+
+$CC tiffmse.c tools_kernel.c tiffread.c tiffwrite.c -lm -ltiff -lfftw3 -o tiffmse
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffmse': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffmse': ${RED}failure${NC}\n"; fi
+
+$CC tiffzoom.c tools_kernel.c tiffreadcomplex.c tiffwritecomplex.c -lm -ltiff -lfftw3 -o tiffzoom
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffzoom': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffzoom': ${RED}failure${NC}\n"; fi
+
+$CC tiffaddnoise.c tiffread.c tiffwrite.c -lm -ltiff -o tiffaddnoise
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffaddnoise': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffaddnoise': ${RED}failure${NC}\n"; fi
+
+$CC tiffdft.c tiffread.c tiffwrite.c -lm -ltiff -lfftw3 -o tiffdft
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffdft': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffdft': ${RED}failure${NC}\n"; fi
+
+$CC tiffcopy.c tiffread.c tiffwrite.c -lm -ltiff -lfftw3 -o tiffcopy
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffcopy': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffcopy': ${RED}failure${NC}\n"; fi
+
+$CC tiffconst.c tiffread.c tiffwrite.c -ltiff -o tiffconst
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffconst': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffconst': ${RED}failure${NC}\n"; fi
+
+$CC tiffsqrt.c tiffread.c tiffwrite.c -ltiff -lm -o tiffsqrt
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffsqrt': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffsqrt': ${RED}failure${NC}\n"; fi
+
+$CC tiffaxpb.c tiffread.c tiffwrite.c -ltiff -lm -o tiffaxpb
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffaxpb': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffaxpb': ${RED}failure${NC}\n"; fi
+
+$CC tiffprintasc.c tiffread.c -ltiff -o tiffprintasc
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffprintasc': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffprintasc': ${RED}failure${NC}\n"; fi
+
+$CC tiffreadasc.c tiffwrite.c -ltiff -o tiffreadasc
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffreadasc': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffreadasc': ${RED}failure${NC}\n"; fi
+
+$CC tiffsize.c tiffread.c -ltiff -o tiffsize
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffsize': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffsize': ${RED}failure${NC}\n"; fi
+
+$CC tiffmerge.c tiffread.c tiffwrite.c -ltiff -o tiffmerge
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffmerge': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffmerge': ${RED}failure${NC}\n"; fi
+
+$CC tiffextract.c tiffread.c tiffwrite.c -lm -ltiff -o tiffextract
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffextract': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffextract': ${RED}failure${NC}\n"; fi
+
+$CC tiffop.c tiffread.c tiffwrite.c -lm -ltiff -o tiffop
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffop': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffop': ${RED}failure${NC}\n"; fi
+
+$CC tiffthre.c tiffread.c tiffwrite.c -lm -ltiff -o tiffthre
+if [ "$?" = "0" ]; then printf "  + compilation of module 'tiffthre': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'tiffthre': ${RED}failure${NC}\n"; fi
+
+echo ""
