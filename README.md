@@ -6,10 +6,11 @@ This software focuses on the problem of computing a single
 super-resolved image from multiple shifted images of the same scene.
 
 It is made of two **independent packages**, one implemented in C, and
-the other in Matlab, stored in the two following directories:
+the other in Matlab. Those two packages are stored in the two
+following directories:
 
 + [c](c): package ([sources](c/src) + [documentation](c/README.md)) in C language;
-+ [matlab](matlab): package ([sources](matlab/src) + [documentation](matlab/README.md)) in C language.
++ [matlab](matlab): package ([sources](matlab/src) + [documentation](matlab/README.md)) in Matlab language.
 
 You can install and use either one or both of those two packages
 independently.
