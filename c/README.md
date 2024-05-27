@@ -226,7 +226,7 @@ routines from the `KNL` and `I/O` source files for further
 operations.
 	
 Notice that several modules of this package, dedicated to basic image
-manipulations in TIFF-Format, were mostly inspired from the MegaWave
+manipulations in TIFF-Format, were mostly inspired from the [MegaWave](https://github.com/nilx/megawave)
 image processing library.
 
 ### Description of the kernel source files of the package
@@ -292,7 +292,7 @@ source files and the companion article are given below.
 | [`tiffreadasc.c`](src/tiffreadasc.c) (*)                 | `CLI` | Read a monopage TIFF image in ascii format                                    | --                                                                                                |
 | [`tiffthre.c`](src/tiffthre.c) (*)                       | `CLI` | Threshold/normalize the pixel's gray-levels of a TIFF image                   | --                                                                                                |
 
-(*) modules adapted or inspired from the MegaWave image processing library [2].
+(*) modules adapted or inspired from the [MegaWave](https://github.com/nilx/megawave) image processing library.
 
 ### Description of the I/O source files of the package
 
