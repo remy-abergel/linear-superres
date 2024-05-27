@@ -79,7 +79,7 @@ have a closer look to the [modules contained into this package](#modules-descrip
   pseudocodes algorithms described in the companion article (Algorithm
   1 and Algorithm 2). This optional input is used inside the
   [`irls`](src/irls.m) module (see the explanations in Section 6 of
-  the companion paper).
+  the companion article).
 
 ## Examples (reproduce several experiments of the companion article)
 ### Simulate realistic low-resolution sequences
