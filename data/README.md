@@ -13,15 +13,13 @@ mentions
 
 ## Flir T640 sequence
 
-![FlirT640 sequence (first frame)](flirT640.tif)
-
 This sequence was acquired by Lionel Moisan using a FLIR T640 camera.
 
 ## Cell sequence
 
-In-vivo recording of Purkinje cells of a living rat, which was
-acquired with a 2-photons microscope. This sequence was kindly
-provided to us by [Jorge Enrique
+In-vivo recording of Purkinje cells of a living rat, recorded using a
+2-photons microscope. This sequence was kindly provided to us by
+[Jorge Enrique
 Ramírez-Buriticá](https://scholar.google.com/citations?user=cQFpBPQAAAAJ&hl=es)
 and [Brandon
 Stell](https://scholar.google.com/citations?user=WLggr90AAAAJ&hl=es),
