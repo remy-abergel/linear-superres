@@ -13,7 +13,9 @@ mentions
 
 ## Flir T640 sequence
 
-This sequence was acquired by Lionel Moisan using a FLIR T640 camera.
+This sequence was acquired by [Lionel
+Moisan](https://www.math-info.univ-paris5.fr/~moisan) using a FLIR
+T640 camera.
 
 ## Cell sequence
 
