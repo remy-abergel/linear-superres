@@ -2,10 +2,10 @@
 
 ## Brooklyn Bridge 
 
-Original image available at 
-https://pxhere.com/fr/photo/1513
+<img src="https://c.pxhere.com/photos/f8/b5/architecture_cable_wire_brooklyn_bridge_bridge-1513.jpg!d" srcset="https://c.pxhere.com/photos/f8/b5/architecture_cable_wire_brooklyn_bridge_bridge-1513.jpg!d" alt="architecture, bridge, skyscraper, cable, wire, line, vehicle, brooklyn bridge, mast, sail, symmetry, tourist attraction, sailing ship, galleon, Free Images In PxHere">
 
-with the mentions
+Original image available at https://pxhere.com/fr/photo/1513 with the
+mentions
 
 + CC0 Public Domain
 + Free for personal and commercial use
