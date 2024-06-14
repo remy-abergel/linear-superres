@@ -21,8 +21,8 @@ The algorithms contained in this software are described in the
 following research paper:
 
 Rémy Abergel, Andrés Almansa, Lionel Moisan and Camille Noûs, "Linear
-Super-Resolution Through Translational Motion", Preprint HAL
-[hal_link](https://hal.sciences/xxxxxxx).
+Super-Resolution Through Translational Motion", Preprint
+[hal-04612465](https://hal.science/hal-04612465).
 
 This work was submitted to the [Image Processing On Line
 (IPOL)](https://www.ipol.im/) Journal and is currently under review.
