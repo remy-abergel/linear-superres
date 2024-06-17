@@ -824,7 +824,7 @@ al.](https://doi.org/10.1109/CVPR.1988.196317) algorithm. We removed
 35 images from the original sequence which were associated with to
 large displacement (>20 micrometer) in order to keep a large-enough
 field of view for the super-resolved image to reconstruct. This leads
-to the sequence of 3186 images shared [XXX here XXX](XXX).
+to the sequence of 3186 images shared [here](../data/2photons.tif).
 
 In the following, we partially reproduce the experiment presented in
 Figure 11 and Figure 15 of the companion article.
