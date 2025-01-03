@@ -17,6 +17,9 @@ echo ""
 $CC simulator.c operators_kernel.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -lm -ltiff -lfftw3 -o simulator
 if [ "$?" = "0" ]; then printf "  + compilation of module 'simulator': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'simulator': ${RED}failure${NC}\n"; fi
 
+$CC gendataset.c gendataset_kernel.c operators_kernel.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -lm -ltiff -lfftw3 -o gendataset
+if [ "$?" = "0" ]; then printf "  + compilation of module 'gendataset': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'gendataset': ${RED}failure${NC}\n"; fi
+
 $CC stack-apodization.c apodization_kernel.c tiffread.c tiffwrite.c ascii.c -lm -ltiff -o stack-apodization
 if [ "$?" = "0" ]; then printf "  + compilation of module 'stack-apodization': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'stack-apodization': ${RED}failure${NC}\n"; fi
 
@@ -37,7 +40,6 @@ if [ "$?" = "0" ]; then printf "  + compilation of module 'luckyimaging': ${GREE
 
 $CC sharpening.c sharpening_kernel.c tiffread.c tiffwrite.c -lm -ltiff -lfftw3 -o sharpening
 if [ "$?" = "0" ]; then printf "  + compilation of module 'sharpening': ${GREEN}success${NC}\n"; else printf "  + compilation of module 'sharpening': ${RED}failure${NC}\n"; fi
-
 
 echo ""
 echo "****************************************************************"

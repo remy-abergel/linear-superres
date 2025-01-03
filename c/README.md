@@ -244,10 +244,10 @@ the package.
 | [`sharpening_kernel.c`](src/sharpening_kernel.c)                   | `KNL` | routines related to image sharpening                                                                     | Section 7                                                     |
 | [`tools_kernel.c`](src/tools_kernel.c)                             | `KNL` | routines dedicated to several image manipulations (circular convolution, sub-pixel shift, zooming, etc.) | --                                                            |
 | [`remove-blackborders_kernel.c`](src/remove-blackborders_kernel.c) | `KNL` | post-treatment tool for removing borders caused by apodization in the processed high-resolution images   | Section 2.3, Section 4 (Figure 6)                             |
+| [`gendataset_kernel.c`](src/gendataset_kernel.c)                   | `KNL` | routines for synthesizing realistic low-resolution sequences from an input high-resolution image         | --                                                            |
 
 More details about the relations between the content of the kernel
 source files and the companion article are given below.
-
 
 | NAME OF THE ROUTINE    | SOURCE FILE                                                  | RELATION WITH THE COMPANION ARTICLE                                                                                                               |
 |------------------------|--------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -291,6 +291,7 @@ source files and the companion article are given below.
 | [`tiffprintasc.c`](src/tiffprintasc.c) (*)               | `CLI` | Print the graylevels of a TIFF image in ascii format                          | --                                                                                                |
 | [`tiffreadasc.c`](src/tiffreadasc.c) (*)                 | `CLI` | Read a monopage TIFF image in ascii format                                    | --                                                                                                |
 | [`tiffthre.c`](src/tiffthre.c) (*)                       | `CLI` | Threshold/normalize the pixel's gray-levels of a TIFF image                   | --                                                                                                |
+| [`gendataset.c`](src/gendataset.c)                       | `CLI` | Synthesize a realistic low-resolution sequence of low-resolution image        | --                                                                                                |
 
 (*) modules adapted or inspired from the [MegaWave](https://github.com/nilx/megawave) image processing library.
 
@@ -307,7 +308,7 @@ source files and the companion article are given below.
 ## Examples (reproduce several experiments of the companion research article)
 ### Simulate realistic low-resolution sequences
 
-We illustrate a procedure for synthetizing realistic sequences of
+We illustrate a procedure for synthesizing realistic sequences of
 low-resolution images from a given high-resolution image and a
 sequence of displacements.
 	
@@ -316,7 +317,7 @@ run the following bash commands:
 
 ```bash
 # display a high-resolution image using ImageJ
-imagej ../../data/bridge.tif 
+imagej ../../data/bridge.tif
 
 # generate a sequence containing 10 random shifts in [-5,5] x [-5,5]
 # using the 'random-shifts' module
@@ -336,6 +337,41 @@ imagej ../../data/bridge.tif
 # display the realistic low-resolution sequence and the corresponding
 # high-resolution image using ImageJ
 imagej /tmp/u0_realistic.tif /tmp/ref.tif	
+```
+
+Notice that, in the above example, the cropping area of the
+low-resolution image yields corners with integer coordinates in the
+corresponding high-resolution domain, allowing the extraction of the
+reference high-resolution image using a simple crop.
+
+Synthesizing some realistic datasets from a reference image with
+different dimensions and using arbitrary subsampling factors
+(especially noninteger) can be trickier using the methodology
+described above. More generic synthesis of realistic datasets can be
+carried out using the `gendataset` module that added in v1.0.2 (note
+that this module was not used in the experiments presented in the
+companion [research article](https://hal.science/hal-04612465).
+
+To use this module, place yourself in the [`src`](src) directory of
+this package and run the following bash commands:
+
+```bash
+# generate a sequence containing 10 random shifts in [-5,5] x [-5,5]
+# using the 'random-shifts' module
+./random-shifts -m -5 -M 5 10 /tmp/shifts.txt
+
+# compute a realistic dataset made of a sequence of low-resolution images 
+# and the corresponding high-resolution ground-truth from an input 
+# high-resolution image (not that the actual subsampling factors may be 
+# slightly different from the requested ones, actual values will be printed 
+# with 17 digits of precision on the standard output)
+zx=2.3 # requested subsampling factor along the horizontal axis
+zy=2.8 # requested subsampling factor along the vertical axis
+./gendataset -zx $zx -zy $zy -r /tmp/ref.tif ../../data/bridge.tif /tmp/shifts.txt /tmp/u0_realistic.tif 
+
+# display the realistic low-resolution sequence and the corresponding
+# high-resolution image using ImageJ
+imagej /tmp/u0_realistic.tif /tmp/ref.tif
 ```
 
 ### Using apodization to avoid boundary artifacts (reproduce Figure 1 of the companion article)
