@@ -43,6 +43,7 @@ in the standard output:
 ****************************************************************
 
   + compilation of module 'simulator': success
+  + compilation of module 'gendataset': success
   + compilation of module 'stack-apodization': success
   + compilation of module 'remove-blackborders': success
   + compilation of module 'leastsquares-superres': success
@@ -83,6 +84,7 @@ following commands:
 
 ```bash
 gcc -w -O3 simulator.c operators_kernel.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -lm -ltiff -lfftw3 -o simulator
+gcc -w -O3 gendataset.c gendataset_kernel.c operators_kernel.c tiffreadcomplex.c tiffwritecomplex.c ascii.c -lm -ltiff -lfftw3 -o gendataset
 gcc -w -O3 stack-apodization.c apodization_kernel.c tiffread.c tiffwrite.c ascii.c -lm -ltiff -o stack-apodization
 gcc -w -O3 remove-blackborders.c remove-blackborders_kernel.c tiffread.c tiffwrite.c ascii.c -lm -ltiff -o remove-blackborders
 gcc -w -O3 leastsquares-superres.c leastsquares_kernel.c operators_kernel.c blockmatrix_kernel.c tiffreadcomplex.c tiffwritecomplex.c tiffwrite.c ascii.c -llapacke -lm -ltiff -lfftw3 -o leastsquares-superres
