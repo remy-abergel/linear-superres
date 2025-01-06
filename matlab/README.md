@@ -70,6 +70,7 @@ have a closer look to the [modules contained into this package](#modules-descrip
   | [sharpening.m](src/sharpening.m)                       | Image sharpening using a frequency amplification filter                                                                                                | implements the image sharpening procedure described in Section 7 |
   | [imview.m](src/imview.m)                               | Image displayer (display an image into a MATLAB Figure with tight borders AND without interpolation: one pixel of the screen = one pixel of the image) | None                                                             |
   | [mview.m](src/mview.m)                                 | Frame-by-frame movie displayer                                                                                                                         | None                                                             |
+  | [gendataset.m](src/gendataset.m)                       | synthesizing realistic low-resolution sequences (without periodic-like boundaries) from an input high-resolution image                                 | None                                                             |
 
   **Additional note**
 
@@ -84,7 +85,7 @@ have a closer look to the [modules contained into this package](#modules-descrip
 ## Examples (reproduce several experiments of the companion article)
 ### Simulate realistic low-resolution sequences
 
-We illustrate a procedure for synthetizing realistic sequences of
+We illustrate a procedure for synthesizing realistic sequences of
 low-resolution images from a given high-resolution image and a
 sequence of displacements.
 
@@ -134,6 +135,49 @@ ref_crop = ref_large(Y0+(1:N),X0+(1:M));
 % high-resolution image
 figure('Name','Reference high-resolution image'); imview(ref_crop);
 figure(); mview(u0_realistic);
+```
+
+Notice that, in the above example, the cropping area of the
+low-resolution image yields corners with integer coordinates in the
+corresponding high-resolution domain, allowing the extraction of the
+reference high-resolution image using a simple crop.
+
+Synthesizing some realistic datasets from a reference image with
+different dimensions and using arbitrary subsampling factors
+(especially noninteger) can be trickier using the methodology
+described above. More generic synthesis of realistic datasets can be
+carried out using the gendataset module that added in v1.0.2 (note
+that this module was not used in the experiments presented in the
+companion research article.
+
+To use this module, you can run the following MATLAB commands:
+
+```matlab
+% load a high-resolution image (Brooklyn bridge)
+ref_large = double(imread('bridge.tif')); 
+
+% generate a sequence containing 10 random shifts in [-5,5] x [-5,5]
+T = -5 + 10*rand(10,2);
+
+% compute a realistic dataset made of a sequence of low-resolution images 
+% and the corresponding high-resolution ground-truth from an input 
+% high-resolution image (not that the actual subsampling factors may be 
+% slightly different from the requested ones, actual values will be printed 
+% with 17 digits of precision on the standard output)
+zx = 2.3; % requested subsampling factor along the horizontal axis
+zy = 2.8; % requested subsampling factor along the vertical axis
+[u0_realistic, ref] = gendataset(ref_large,T,zx,zy);
+
+% retrieve actual subsampling factors
+[N,M] = size(ref);
+[n,m] = size(u0_realistic,[1,2]);
+zx = M/m;
+zy = N/n;
+
+% display the generated realistic low-resolution sequence and the corresponding
+% high-resolution image
+figure('Name', 'Reference high-resolution image'); imview(ref); 
+figure(); mview(u0_realistic); 
 ```
 
 ### Using apodization to avoid boundary artifacts (reproduce Figure 1 of the companion article)
