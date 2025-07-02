@@ -18,7 +18,7 @@ function [u0_apod,apod_hr,apod_lr] = stack_apodization(u0,T,M,N,varargin)
 %
 % Optional Name-Value pair arguments:
 %
-%   ['r',r] : (scalar positive double, default r = .05) smoothness
+%   ['r',r] : (scalar positive double, default r = .025) smoothness
 %             parameter of the Tukey apodization profile
 %
 % Description: compute low/high resolution multiplicative extended
@@ -37,7 +37,7 @@ p.addRequired('u0');
 p.addRequired('T');
 p.addRequired('M');
 p.addRequired('N');
-p.addParameter('r',.05);
+p.addParameter('r',.025);
 parse(p,u0,T,M,N,varargin{:});
 r = p.Results.r;
 
