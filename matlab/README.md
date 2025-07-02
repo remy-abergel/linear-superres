@@ -307,8 +307,8 @@ T = -5 + 10*rand(L,2); % random displacement sequence
 u0_nonrealistic = simulator(ref_crop,T,m,n);
 sig = 2; % noise level (standard deviation)
 u0_noisy = u0_nonrealistic + sig*randn(size(u0_nonrealistic));
-sig_apod = 1; % sigma parameter used to design the apodization filters
-[u0_apod,apod_hr] = stack_apodization(u0_noisy,T,M,N,'sigma',sig_apod); % generates a realistic apodized low-resolution sequence (from a non-realistic low-resolution sequence)
+r = 0.025; % apodization (Tukey) smoothness parameter
+[u0_apod,apod_hr] = stack_apodization(u0_noisy,T,M,N,'r',r); % generates a realistic apodized low-resolution sequence (from a non-realistic low-resolution sequence)
 figure('Name','apodized low-resolution sequence'); mview(u0_apod);
 
 % perform prediction of the least-square super-resolution
@@ -334,8 +334,8 @@ figure('Name','reconstruction absolute error (spatial domain)'); imview(abs(ref_
 % removing the black borders (that do not correspond to useful signal)
 % from the apodized high-resolution images, the observed MSE and PSNR
 % are even closer to their predicted values
-delta_x = ceil((M/m)*max(abs(T(:,1))) + 10*sig_apod);
-delta_y = ceil((N/n)*max(abs(T(:,2))) + 10*sig_apod);
+delta_x = ceil((M/m)*max(abs(T(:,1))) + r*(M-1)/2);
+delta_y = ceil((N/n)*max(abs(T(:,2))) + r*(N-1)/2);
 ref_apod_noborder = ref_apod((1+delta_y):(N-delta_y),(1+delta_x):(M-delta_x));
 uls_noborder = uls((1+delta_y):(N-delta_y),(1+delta_x):(M-delta_x));
 mse_observed2 = mean((uls_noborder(:)-ref_apod_noborder(:)).^2);
@@ -450,7 +450,7 @@ n = N/2; % height of the low-resolution domain (zy = N/n = 2)
 Nsimu = 50; % number of simulations per tested value of L (in Figure 6 (a) we used Nsimu = 100)
 L_list = [4,5,6,8,10,12,14]; % values of L to be tested
 sig_noise = 2; % noise level in the low-resolution sequence
-sig_apod = 1; % apodization parameter
+r_apod = 0.025; % apodization smoothness parameter
 PSNR_PRED = zeros(Nsimu,numel(L_list));
 PSNR_OBSERVED = zeros(Nsimu,numel(L_list));
 for idL = 1:numel(L_list)
@@ -459,13 +459,13 @@ for idL = 1:numel(L_list)
 	
 	% generate a random low-resolution stack 
 	T = -5 + 10*randn(L,2); 
-	[u0_apod,apod_hr] = stack_apodization(simulator(ref_crop,T,m,n) + sig_noise*randn(n,m,L),T,M,N,'sigma',sig_apod); 
+	[u0_apod,apod_hr] = stack_apodization(simulator(ref_crop,T,m,n) + sig_noise*randn(n,m,L),T,M,N,'r',r_apod);
 	
 	% compute reference image associated to the apodized sequence (and
 	% remove black borders due to apodization)
 	ref_apod = ref_crop .* apod_hr; 
-	delta_x = ceil((M/m)*max(abs(T(:,1))) + 10*sig_apod); 
-	delta_y = ceil((N/n)*max(abs(T(:,2))) + 10*sig_apod); 
+	delta_x = ceil((M/m)*max(abs(T(:,1))) + r_apod*(M-1)/2); 
+	delta_y = ceil((N/n)*max(abs(T(:,2))) + r_apod*(N-1)/2); 
 	ref_apod_noborder = ref_apod((1+delta_y):(N-delta_y),(1+delta_x):(M-delta_x));
 	
 	% predict the PSNR of the least-squares super-resolution reconstruction 
@@ -486,7 +486,7 @@ for idL = 1:numel(L_list)
 	
 	end 
 end
-     
+
 fg = figure(); hold on; 
 leg = {}; 
 for idL = 1:numel(L_list)
@@ -508,7 +508,7 @@ n = round(N/2.3); % height of the low-resolution domain (zy = N/n close to 2.3)
 Nsimu = 50; % number of simulations per tested value of L (in Figure 6 (b) we used Nsimu = 100)
 L_list = [9,10,11,13,15,17,19]; % values of L to be tested
 sig_noise = 2; % noise level in the low-resolution sequence
-sig_apod = 1; % apodization parameter
+r_apod = 0.025; % apodization smoothness parameter
 PSNR_PRED = zeros(Nsimu,numel(L_list));
 PSNR_OBSERVED = zeros(Nsimu,numel(L_list));
 for idL = 1:numel(L_list)
@@ -517,13 +517,13 @@ for idL = 1:numel(L_list)
 	
 	% generate a random low-resolution stack 
 	T = -5 + 10*randn(L,2); 
-	[u0_apod,apod_hr] = stack_apodization(simulator(ref_crop,T,m,n) + sig_noise*randn(n,m,L),T,M,N,'sigma',sig_apod); 
+	[u0_apod,apod_hr] = stack_apodization(simulator(ref_crop,T,m,n) + sig_noise*randn(n,m,L),T,M,N,'r',r_apod); 
 	
 	% compute reference image associated to the apodized sequence (and
 	% remove black borders due to apodization)
 	ref_apod = ref_crop .* apod_hr; 
-	delta_x = ceil((M/m)*max(abs(T(:,1))) + 10*sig_apod); 
-	delta_y = ceil((N/n)*max(abs(T(:,2))) + 10*sig_apod); 
+	delta_x = ceil((M/m)*max(abs(T(:,1))) + r_apod*(M-1)/2); 
+	delta_y = ceil((N/n)*max(abs(T(:,2))) + r_apod*(N-1)/2); 
 	ref_apod_noborder = ref_apod((1+delta_y):(N-delta_y),(1+delta_x):(M-delta_x));
 	
 	% predict the PSNR of the least-squares super-resolution reconstruction 
@@ -615,6 +615,7 @@ figure('Name',sprintf('PSNR = %.3g dB (first decile)',psnr1)); imview(uls1,'blac
 figure('Name',sprintf('PSNR = %.3g dB (median)',psnr2)); imview(uls2,'black',0,'white',255); 
 figure('Name',sprintf('PSNR = %.3g dB (last decile)',psnr3)); imview(uls3,'black',0,'white',255); 
 ```
+
 ### Least-squares reconstruction using erroneous displacements (reproduce Figure 10 of the companion article)
    
 In this experiment, we perform least-squares reconstruction from
@@ -900,7 +901,7 @@ N = 2*n; % height of the high-resolution domain (super-resolution factor zy = 2)
 
 % apodize the FLIR sequence to avoid edge effects in the 
 % reconstruction
-u0_apod = stack_apodization(u0,T,M,N,'sigma',0.5);
+u0_apod = stack_apodization(u0,T,M,N,'r',0.09);
 
 % compute the shift-and-add (i.e., the temporal of the registered
 % low-resolution sequence)
