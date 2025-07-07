@@ -21,8 +21,8 @@ function [u0_apod,apod_hr,apod_lr] = stack_apodization(u0,T,M,N,varargin)
 %   ['r',r] : (scalar positive double, default r = .025) smoothness
 %             parameter of the Tukey apodization profile
 %
-% Description: compute low/high resolution multiplicative extended
-%              apodization filters.
+% Description: compute apodized low-resolution sequence and low/high
+%              resolution apodization filters
 %
 
 %% Control number of inputs
@@ -92,14 +92,14 @@ dy = Dy/(N-1);
 % compute the high-resolution apodization filter
 x = (0:M-1)/(M-1);
 y = (0:N-1)'/(N-1);
-apod_hr = tukey(x, 'r', r, 'd', dx) .* tukey(y, 'r', r, 'd', dy);
+apod_hr = modified_tukey(x, 'r', r, 'd', dx) .* modified_tukey(y, 'r', r, 'd', dy);
 
 % compute the low-resolution apodization filters
 x = (0:m-1);
 y = (0:n-1)';
 x = zx * (x + reshape(T(:, 1), [1, 1, L])) / (M-1);
 y = zy * (y + reshape(T(:, 2), [1, 1, L])) / (N-1);
-apod_lr = reshape(tukey(x, 'r', r, 'd', dx) .* tukey(y, 'r', r, 'd', dy), [n,m,L]);
+apod_lr = reshape(modified_tukey(x, 'r', r, 'd', dx) .* modified_tukey(y, 'r', r, 'd', dy), [n,m,L]);
 
 % compute the apodized sequence
 u0_apod = u0.*apod_lr;
