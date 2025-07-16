@@ -351,9 +351,9 @@ Synthesizing some realistic datasets from a reference image with
 different dimensions and using arbitrary subsampling factors
 (especially noninteger) can be trickier using the methodology
 described above. More generic synthesis of realistic datasets can be
-carried out using the `gendataset` module that added in v1.0.2 (note
+carried out using the `gendataset` module that was added in [v1.0.2](https://github.com/remy-abergel/linear-superres/releases/tag/v1.0.2) (note
 that this module was not used in the experiments presented in the
-companion [research article](https://hal.science/hal-04612465).
+companion [research article](https://hal.science/hal-04612465)).
 
 To use this module, place yourself in the [`src`](src) directory of
 this package and run the following bash commands:
