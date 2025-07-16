@@ -254,7 +254,7 @@ source files and the companion article are given below.
 
 | NAME OF THE ROUTINE    | SOURCE FILE                                                  | RELATION WITH THE COMPANION ARTICLE                                                                                                               |
 |------------------------|--------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `apodization`          | [`apodization_kernel.c`](src/apodization_kernel.c)           | computes the apodization filter *gamma* involved in equations (14) and (16) as well the apodized low-resolution sequence defined in (15)           |
+| `apodization`          | [`apodization_kernel.c`](src/apodization_kernel.c)           | computes the apodization filter *gamma* involved in equations (14)--(16) as well the apodized low-resolution sequence defined in (15)              |
 | `direct_operator_dft`  | [`operators_kernel.c`](src/operators_kernel.c)               | computes the **Discrete Fourier Transform (DFT) of Aj(u)** (operator Aj applied to the high-resolution image u) using Equation (27)               |
 | `adjoint_operator_dft` | [`operators_kernel.c`](src/operators_kernel.c)               | computes the *DFT of adj_Aj(v)* (adjoint of Aj applied to the low-resolution image v) using Equation (28)                                         |
 | `compute_blockmatrix`  | [`leastsquares_kernel.c`](src/leastsquares_kernel.c)         | implements the pseudocode **Algorithm 1**                                                                                                         |
