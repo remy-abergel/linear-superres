@@ -63,15 +63,18 @@ have a closer look to the [modules contained into this package](#modules-descrip
   | [simulator.m](src/simulator.m)                         | Compute a stack of (shifted and subsampled) low-resolution images from an input high resolution image                                                  | implements the operator A defined in Equation (12)               |
   | [stack_apodization.m](src/stack_apodization.m)         | Apodization of a low-resolution sequence (used to avoid reconstruction artifacts when processing real-life sequences)                                  | implements the apodization procedure described in Section 2.3    |
   | [compute_blockmatrix.m](src/compute_blockmatrix.m)     | Computation of a block matrix                                                                                                                          | implements the pseudocode Algorithm 1 described in Section 3.4   |
+  | [error_prediction.m](src/error_prediction.m)           | Prediction of the reconstruction error                                                                                                                 | implements the error amplification map A defined in Equation (41) and the predicted MSE and PSNR (46) associated to the least-squares reconstruction (Section 4)                |
   | [leastsquares_superres.m](src/leastsquares_superres.m) | Super-resolution using the least-squares estimator                                                                                                     | implements the pseudocode Algorithm 2 described in Section 3.4   |
   | [irls.m](src/irls.m)                                   | Iteratively Reweighted Least-Squares                                                                                                                   | implements the IRLS procedure described in Section 6             |
-|                                                        |                                                                                                                                                        |                                                                  |
   | [luckyimaging.m](src/luckyimaging.m)                   | Lucky-imaging procedure for least-squares image super-resolution                                                                                       | implements the lucky-imaging procedure described in Section 6    |
   | [sharpening.m](src/sharpening.m)                       | Image sharpening using a frequency amplification filter                                                                                                | implements the image sharpening procedure described in Section 7 |
+  | [modified_tukey.m](src/modified_tukey.m)               | Modified Tukey apodization profile        | implements the modified Tukey apodization profile defined in Equation (13) and used to compute the apodization filters presented in Section 2.3         |
+  | [shannon_zooming.m](src/shannon_zooming.m) | image zooming using the complex variant of the Shannon interpolation | Used several times to magnify images (see reproducible experiments below) |
+  | [gendataset.m](src/gendataset.m)                       | Synthesizing realistic low-resolution sequences (without periodic-like boundaries) from an input high-resolution image                                 | Used in the online demo |
+  | [perdecomp.m](src/perdecomp.m)           | [Periodic plus smooth decomposition](https://doi.org/10.1007/s10851-010-0227-1) | used by [gendataset.m](src/gendataset.m) to generate realistic low-resolution sequences from a ground-truth high-resolution image | 
   | [imview.m](src/imview.m)                               | Image displayer (display an image into a MATLAB Figure with tight borders AND without interpolation: one pixel of the screen = one pixel of the image) | None                                                             |
   | [mview.m](src/mview.m)                                 | Frame-by-frame movie displayer                                                                                                                         | None                                                             |
-  | [gendataset.m](src/gendataset.m)                       | synthesizing realistic low-resolution sequences (without periodic-like boundaries) from an input high-resolution image                                 | None                                                             |
-
+  
   **Additional note**
 
   The modules [`compute_blockmatrix`](src/compute_blockmatrix.m) and
@@ -146,9 +149,9 @@ Synthesizing some realistic datasets from a reference image with
 different dimensions and using arbitrary subsampling factors
 (especially noninteger) can be trickier using the methodology
 described above. More generic synthesis of realistic datasets can be
-carried out using the gendataset module that added in v1.0.2 (note
+carried out using the gendataset module that was added in [v1.0.2](https://github.com/remy-abergel/linear-superres/releases/tag/v1.0.2) (note
 that this module was not used in the experiments presented in the
-companion research article.
+companion [research article](https://hal.science/hal-04612465)).
 
 To use this module, you can run the following MATLAB commands:
 
@@ -307,8 +310,8 @@ T = -5 + 10*rand(L,2); % random displacement sequence
 u0_nonrealistic = simulator(ref_crop,T,m,n);
 sig = 2; % noise level (standard deviation)
 u0_noisy = u0_nonrealistic + sig*randn(size(u0_nonrealistic));
-sig_apod = 1; % sigma parameter used to design the apodization filters
-[u0_apod,apod_hr] = stack_apodization(u0_noisy,T,M,N,'sigma',sig_apod); % generates a realistic apodized low-resolution sequence (from a non-realistic low-resolution sequence)
+r = 0.025; % apodization (Tukey) smoothness parameter
+[u0_apod,apod_hr] = stack_apodization(u0_noisy,T,M,N,'r',r); % generates a realistic apodized low-resolution sequence (from a non-realistic low-resolution sequence)
 figure('Name','apodized low-resolution sequence'); mview(u0_apod);
 
 % perform prediction of the least-square super-resolution
@@ -334,8 +337,8 @@ figure('Name','reconstruction absolute error (spatial domain)'); imview(abs(ref_
 % removing the black borders (that do not correspond to useful signal)
 % from the apodized high-resolution images, the observed MSE and PSNR
 % are even closer to their predicted values
-delta_x = ceil((M/m)*max(abs(T(:,1))) + 10*sig_apod);
-delta_y = ceil((N/n)*max(abs(T(:,2))) + 10*sig_apod);
+delta_x = ceil((M/m)*max(abs(T(:,1))) + r*(M-1)/2);
+delta_y = ceil((N/n)*max(abs(T(:,2))) + r*(N-1)/2);
 ref_apod_noborder = ref_apod((1+delta_y):(N-delta_y),(1+delta_x):(M-delta_x));
 uls_noborder = uls((1+delta_y):(N-delta_y),(1+delta_x):(M-delta_x));
 mse_observed2 = mean((uls_noborder(:)-ref_apod_noborder(:)).^2);
@@ -450,7 +453,7 @@ n = N/2; % height of the low-resolution domain (zy = N/n = 2)
 Nsimu = 50; % number of simulations per tested value of L (in Figure 6 (a) we used Nsimu = 100)
 L_list = [4,5,6,8,10,12,14]; % values of L to be tested
 sig_noise = 2; % noise level in the low-resolution sequence
-sig_apod = 1; % apodization parameter
+r_apod = 0.025; % apodization smoothness parameter
 PSNR_PRED = zeros(Nsimu,numel(L_list));
 PSNR_OBSERVED = zeros(Nsimu,numel(L_list));
 for idL = 1:numel(L_list)
@@ -459,13 +462,13 @@ for idL = 1:numel(L_list)
 	
 	% generate a random low-resolution stack 
 	T = -5 + 10*randn(L,2); 
-	[u0_apod,apod_hr] = stack_apodization(simulator(ref_crop,T,m,n) + sig_noise*randn(n,m,L),T,M,N,'sigma',sig_apod); 
+	[u0_apod,apod_hr] = stack_apodization(simulator(ref_crop,T,m,n) + sig_noise*randn(n,m,L),T,M,N,'r',r_apod);
 	
 	% compute reference image associated to the apodized sequence (and
 	% remove black borders due to apodization)
 	ref_apod = ref_crop .* apod_hr; 
-	delta_x = ceil((M/m)*max(abs(T(:,1))) + 10*sig_apod); 
-	delta_y = ceil((N/n)*max(abs(T(:,2))) + 10*sig_apod); 
+	delta_x = ceil((M/m)*max(abs(T(:,1))) + r_apod*(M-1)/2); 
+	delta_y = ceil((N/n)*max(abs(T(:,2))) + r_apod*(N-1)/2); 
 	ref_apod_noborder = ref_apod((1+delta_y):(N-delta_y),(1+delta_x):(M-delta_x));
 	
 	% predict the PSNR of the least-squares super-resolution reconstruction 
@@ -486,7 +489,7 @@ for idL = 1:numel(L_list)
 	
 	end 
 end
-     
+
 fg = figure(); hold on; 
 leg = {}; 
 for idL = 1:numel(L_list)
@@ -508,7 +511,7 @@ n = round(N/2.3); % height of the low-resolution domain (zy = N/n close to 2.3)
 Nsimu = 50; % number of simulations per tested value of L (in Figure 6 (b) we used Nsimu = 100)
 L_list = [9,10,11,13,15,17,19]; % values of L to be tested
 sig_noise = 2; % noise level in the low-resolution sequence
-sig_apod = 1; % apodization parameter
+r_apod = 0.025; % apodization smoothness parameter
 PSNR_PRED = zeros(Nsimu,numel(L_list));
 PSNR_OBSERVED = zeros(Nsimu,numel(L_list));
 for idL = 1:numel(L_list)
@@ -517,13 +520,13 @@ for idL = 1:numel(L_list)
 	
 	% generate a random low-resolution stack 
 	T = -5 + 10*randn(L,2); 
-	[u0_apod,apod_hr] = stack_apodization(simulator(ref_crop,T,m,n) + sig_noise*randn(n,m,L),T,M,N,'sigma',sig_apod); 
+	[u0_apod,apod_hr] = stack_apodization(simulator(ref_crop,T,m,n) + sig_noise*randn(n,m,L),T,M,N,'r',r_apod); 
 	
 	% compute reference image associated to the apodized sequence (and
 	% remove black borders due to apodization)
 	ref_apod = ref_crop .* apod_hr; 
-	delta_x = ceil((M/m)*max(abs(T(:,1))) + 10*sig_apod); 
-	delta_y = ceil((N/n)*max(abs(T(:,2))) + 10*sig_apod); 
+	delta_x = ceil((M/m)*max(abs(T(:,1))) + r_apod*(M-1)/2); 
+	delta_y = ceil((N/n)*max(abs(T(:,2))) + r_apod*(N-1)/2); 
 	ref_apod_noborder = ref_apod((1+delta_y):(N-delta_y),(1+delta_x):(M-delta_x));
 	
 	% predict the PSNR of the least-squares super-resolution reconstruction 
@@ -615,6 +618,7 @@ figure('Name',sprintf('PSNR = %.3g dB (first decile)',psnr1)); imview(uls1,'blac
 figure('Name',sprintf('PSNR = %.3g dB (median)',psnr2)); imview(uls2,'black',0,'white',255); 
 figure('Name',sprintf('PSNR = %.3g dB (last decile)',psnr3)); imview(uls3,'black',0,'white',255); 
 ```
+
 ### Least-squares reconstruction using erroneous displacements (reproduce Figure 10 of the companion article)
    
 In this experiment, we perform least-squares reconstruction from
@@ -900,7 +904,7 @@ N = 2*n; % height of the high-resolution domain (super-resolution factor zy = 2)
 
 % apodize the FLIR sequence to avoid edge effects in the 
 % reconstruction
-u0_apod = stack_apodization(u0,T,M,N,'sigma',0.5);
+u0_apod = stack_apodization(u0,T,M,N,'r',0.09);
 
 % compute the shift-and-add (i.e., the temporal of the registered
 % low-resolution sequence)

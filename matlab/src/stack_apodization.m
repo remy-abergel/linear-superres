@@ -18,13 +18,11 @@ function [u0_apod,apod_hr,apod_lr] = stack_apodization(u0,T,M,N,varargin)
 %
 % Optional Name-Value pair arguments:
 %
-%   ['sigma',s] : (scalar positive double, default s = 1.0), sharpness
-%                 parameter for the profile such as 10*sigma = length of
-%                 the transition intervals where the profile increases from
-%                 0 to 1 or decrease from 1 to 0.
+%   ['r',r] : (scalar positive double, default r = .025) smoothness
+%             parameter of the Tukey apodization profile
 %
-% Description: compute low/high resolution multiplicative apodization
-%              filters.
+% Description: compute apodized low-resolution sequence and low/high
+%              resolution apodization filters
 %
 
 %% Control number of inputs
@@ -39,9 +37,9 @@ p.addRequired('u0');
 p.addRequired('T');
 p.addRequired('M');
 p.addRequired('N');
-p.addParameter('sigma',1);
+p.addParameter('r',.025);
 parse(p,u0,T,M,N,varargin{:});
-sigma = p.Results.sigma;
+r = p.Results.r;
 
 %% consistency checks
 % input u0 (hypermatrix of double real numbers)
@@ -70,37 +68,38 @@ if(~isreal(N) || ~isscalar(N) || N ~= floor(N) || N <= size(u0,1))
     help leastsquares_superres;
     error('input N must be a real scalar number, without decimal part (N == floor(N)), larger than or equal to the height of the input sequence (N >= size(u0,1))');
 end
-% input sigma (scalar positive number)
-if(~isreal(sigma) || ~isscalar(sigma) || sigma <= 0)
+% input r (scalar positive number)
+if(~isreal(r) || ~isscalar(r) || r <= 0)
     help stack_apodization;
     error('input sigma (sharpness parameter of the apodization profile) must be a real number > 0');
 end
 
 %% CORE OF THE MODULE
-
+    
 % retrieve dimensions of the low-resolution sequence and compute the
 % super-resolution factors (zx,zy) 
 [n,m,L] = size(u0);
 zx = M/m; 
 zy = N/n;
 
-% macro for the 1D profile
-f = @(Q,D,t) 0.5*erfc((abs((Q-1)/2-t) - ((Q-1)/2-D-5*sigma))/(sigma*sqrt(2)));
-
 % retrieve the maximum displacements along the horizontal & vertical
 % directions 
 Dx = max(abs(zx*T(:,1)));
 Dy = max(abs(zy*T(:,2)));
+dx = Dx/(M-1); 
+dy = Dy/(N-1); 
 
 % compute the high-resolution apodization filter
-[x,y] = meshgrid(0:M-1,0:N-1);
-apod_hr = f(M,Dx,x).*f(N,Dy,y);
+x = (0:M-1)/(M-1);
+y = (0:N-1)'/(N-1);
+apod_hr = modified_tukey(x, 'r', r, 'd', dx) .* modified_tukey(y, 'r', r, 'd', dy);
 
 % compute the low-resolution apodization filters
-[x,y] = meshgrid(0:m-1,0:n-1);
-x = zx*(x(:)+T(:,1)');
-y = zy*(y(:)+T(:,2)');
-apod_lr = reshape(f(M,Dx,x).*f(N,Dy,y),[n,m,L]);
+x = (0:m-1);
+y = (0:n-1)';
+x = zx * (x + reshape(T(:, 1), [1, 1, L])) / (M-1);
+y = zy * (y + reshape(T(:, 2), [1, 1, L])) / (N-1);
+apod_lr = reshape(modified_tukey(x, 'r', r, 'd', dx) .* modified_tukey(y, 'r', r, 'd', dy), [n,m,L]);
 
 % compute the apodized sequence
 u0_apod = u0.*apod_lr;

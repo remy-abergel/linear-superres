@@ -5,7 +5,7 @@
 #define ASSERT_ALLOC(cmd) if(NULL == (cmd)) { printf("Not enough memory\n"); exit(EXIT_FAILURE); }
 
 /* internal modules */
-int remove_blackborders(double**,int*,int*,double*,double*,double*,int,int,int,int,int,double,char); 
+int remove_blackborders(double**,int*,int*,double*,double*,double*,int,int,int,int,int,double,char,char); 
 
 /* remove_blackborders: crop a high resolution image to remove borders
                         caused by apodization
@@ -34,13 +34,16 @@ int remove_blackborders(double**,int*,int*,double*,double*,double*,int,int,int,i
    + ntranslations : number of displacement vectors (number of
                      elements in dx and dy arrays)
   
-   + sigma : sharpness parameter of the apodization profiles (must be
-             the same as that used for apodization of the low-resolution
-             sequence)
+   + s : sharpness parameter of the apodization profiles (must be the
+         same as that used for apodization of the low-resolution
+         sequence)
   
    + vflag : verbose flag (set vflag = 0 to disable verbose mode, or
              vflag != 0 to enable verbose mode)
-  
+   	     
+   + eflag : set eflag = 0 to use consider Tukey apodization profile,
+             or eflag = 1 to consider the erfc apodization profile
+        
    + ucrop : on entry -> non allocated double array, on exit ->
              allocated double array containing the graylevels of the
              output cropped image
@@ -56,21 +59,27 @@ int remove_blackborders(double**,int*,int*,double*,double*,double*,int,int,int,i
    execution, it returns EXIT_FAILURE otherwise.
  
 */
-int remove_blackborders(double **ucrop,int *Nxcrop, int *Nycrop, double *u, double *dx, double *dy, int Nx, int Ny, int nx, int ny, int ntranslations, double sigma, char vflag)
+int remove_blackborders(double **ucrop,int *Nxcrop, int *Nycrop, double *u, double *dx, double *dy, int Nx, int Ny, int nx, int ny, int ntranslations, double s, char vflag, char eflag)
 {
   int adr,x,y,delta_x,delta_y; 
   double dxmax=dx[0],dymax=dy[0];
 
   // retrieve maximal displacements along both directions // 
   for(adr=0;adr<ntranslations;adr++) {
-    dxmax = fmax(dxmax,dx[adr]); 
-    dymax = fmax(dymax,dy[adr]); 
+    dxmax = fmax(dxmax,fabs(dx[adr])); 
+    dymax = fmax(dymax,fabs(dy[adr])); 
   }
 
-  // compute thickness of the black borders along both directions //  
-  delta_x = (int)ceil(((double)Nx/(double)nx)*dxmax + 10.*sigma);
-  delta_y = (int)ceil(((double)Ny/(double)ny)*dymax + 10.*sigma);
-
+  // compute thickness of the black borders along both directions //
+  if (eflag) { // erfc profile (s = sigma)
+    delta_x = (int)ceil(((double)Nx/(double)nx)*dxmax + 10.*s);
+    delta_y = (int)ceil(((double)Ny/(double)ny)*dymax + 10.*s);
+  }
+  else { // Tukey profile (s = r)
+    delta_x = (int)ceil(((double)Nx/(double)nx)*dxmax + .5*s*((double)(Nx-1)));
+    delta_y = (int)ceil(((double)Ny/(double)ny)*dymax + .5*s*((double)(Ny-1)));
+  }
+  
   // compute dimensions of the cropped image //
   *Nxcrop = Nx-2*delta_x; 
   *Nycrop = Ny-2*delta_y;

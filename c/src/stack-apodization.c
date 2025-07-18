@@ -9,7 +9,8 @@
 extern int load_tiff_into_double(double***,int*,int*,int*,char*,char); // see source file 'tiffread.c'
 extern int save_monopage_striped_tiff_from_double(char*,double*,int,int,char,int,char*); // see source file 'tiffwrite.c'
 extern int getasciitranslations(double**,double**,int*,char*,char); // see source file 'ascii.c'
-extern int apodization(double**,double**,double*,double*,double*,double,int,int,int,int,int,char); // see source file 'apodization_kernel.c'
+extern int erfc_apodization(double**,double**,double*,double*,double*,double,int,int,int,int,int,char); // see source file 'apodization_kernel.c'
+extern int tukey_apodization(double**,double**,double*,double*,double*,double,int,int,int,int,int,char); // see source file 'apodization_kernel.c'
 
 /* usage displayer */
 static void display_usage()
@@ -18,8 +19,7 @@ static void display_usage()
   printf("Usage: stack-apodization [-ftype type] [-s sigma] [-M M] [-zx zx] [-N N] [-zy zy] [-g apod_lr] [-G apod_hr] [-a apod_u0] [-v] u0 T\n\n");
   printf(" -ftype type : (default float) datatype of the output TIFF images, possible\n");
   printf("               choices are {uint8,int8,uint16,int16,uint32,int32,float}\n");
-  printf(" -s sigma    : (default 1.) sharpness parameter for the profile (positive double)\n");
-  printf("               such as 10*sigma = length of the transition intervals\n");
+  printf(" -r r        : (default 0.025) sharpness parameter for the Tukey profile (positive double)\n");
   printf(" -M M        : (default 2 * width of u0) set width of the high-resolution domain...\n");
   printf(" -zx zx      : ... or set X-axis super-resolution factor (double >= 1.)\n");
   printf(" -N N        : (default 2 * height of u0) set height of the high-resolution domain...\n");
@@ -27,6 +27,8 @@ static void display_usage()
   printf(" -G apod_hr  : output high-resolution apodization filter (monopage TIFF-float image)\n");
   printf(" -g apod_lr  : output stack of low-resolution apodization filters (multipage TIFF-float image)\n");
   printf(" -a apod_u0  : output apodized stack of low-resolution images (multipage TIFF image)\n");
+  printf(" -e          : replace the Tukey apodization profile by the erfc apodization profile with\n");
+  printf("               smoothness parameter sigma = r / 0.025.\n");
   printf(" -v          : enable verbose mode\n");
   printf(" u0          : input low-resolution stack (multipage TIFF image)\n");
   printf(" T           : input sequence of displacements (ASCII format)\n\n");
@@ -35,8 +37,8 @@ static void display_usage()
 /* command line interface */
 int main(int argc, char **argv)
 {
-  char *datatype=NULL,*fname_apod_hr=NULL,*fname_apod_lr=NULL,*fname_apod_u0=NULL,*fname_u0=NULL,*fname_T=NULL,*M_value=NULL,*N_value=NULL,*zx_value=NULL,*zy_value=NULL,*sigma_value=NULL,vflag=0;
-  double **u0=NULL,**apod_lr=NULL,*apod_hr=NULL,*dx=NULL,*dy=NULL,sigma,zx,zy,zx_tmp,zy_tmp;
+  char *datatype=NULL,*fname_apod_hr=NULL,*fname_apod_lr=NULL,*fname_apod_u0=NULL,*fname_u0=NULL,*fname_T=NULL,*M_value=NULL,*N_value=NULL,*zx_value=NULL,*zy_value=NULL,*r_value=NULL,vflag=0,eflag=0;
+  double **u0=NULL,**apod_lr=NULL,*apod_hr=NULL,*dx=NULL,*dy=NULL,r,sigma,zx,zy,zx_tmp,zy_tmp;
   int err,k,type,nx,ny,nimages,ntranslations,Nx,Ny;
 
   /*************************/
@@ -44,6 +46,7 @@ int main(int argc, char **argv)
   /*************************/
   for(k=1; k<argc; k++) {
     if (strcmp(argv[k],"-v") == 0) vflag = 1;
+    else if (strcmp(argv[k],"-e") == 0) eflag = 1; 
     else if (strcmp(argv[k],"-ftype") == 0) {
       if(k==argc-1) { display_usage(); printf("Error: option -ftype requires an argument\n\n"); return EXIT_FAILURE; }
       else { datatype = argv[k+1]; k++; }
@@ -76,11 +79,11 @@ int main(int argc, char **argv)
 	if(err != 1) { display_usage(); printf("Error: could not retrieve properly the argument of option -zy\n\n"); return EXIT_FAILURE; }
       }
     }
-    else if (strcmp(argv[k],"-s") == 0) {
-      if(k==argc-1) { display_usage(); printf("Error: option -s requires an argument\n\n"); return EXIT_FAILURE; }
+    else if (strcmp(argv[k],"-r") == 0) {
+      if(k==argc-1) { display_usage(); printf("Error: option -r requires an argument\n\n"); return EXIT_FAILURE; }
       else {
-	sigma_value = argv[k+1]; err = sscanf(sigma_value,"%lf",&sigma); k++;
-	if(err != 1) { display_usage(); printf("Error: could not retrieve properly the argument of option -s\n\n"); return EXIT_FAILURE; }
+	r_value = argv[k+1]; err = sscanf(r_value,"%lf",&r); k++;
+	if(err != 1) { display_usage(); printf("Error: could not retrieve properly the argument of option -r\n\n"); return EXIT_FAILURE; }
       }
     }
     else if (strcmp(argv[k],"-G") == 0) { fname_apod_hr = argv[k+1]; k++; }
@@ -98,7 +101,8 @@ int main(int argc, char **argv)
   if(NULL != N_value && NULL != zy_value) { display_usage(); printf("Error: options -N and -zy cannot be used simultaneously\n\n"); return EXIT_FAILURE; }
   if(NULL != zx_value && zx < 1.) { display_usage(); printf("Error: input 'zx' must be greater than or equal to one.\n\n"); return EXIT_FAILURE; }
   if(NULL != zy_value && zy < 1.) { display_usage(); printf("Error: input 'zy' must be greater than or equal to one.\n\n"); return EXIT_FAILURE; }
-  if(NULL == sigma_value) sigma = 1.;
+  if(NULL == r_value) r = 0.025;
+  if (eflag) sigma = r / 0.025;
 
   /*********************/
   /* check consistency */
@@ -205,7 +209,8 @@ int main(int argc, char **argv)
   /***********************/
   /* CORE OF THE ROUTINE */
   /***********************/
-  apodization((fname_apod_u0?u0:NULL),apod_lr,apod_hr,dx,dy,sigma,nx,ny,Nx,Ny,nimages,vflag);
+  if(eflag) erfc_apodization((fname_apod_u0?u0:NULL),apod_lr,apod_hr,dx,dy,sigma,nx,ny,Nx,Ny,nimages,vflag);
+  else tukey_apodization((fname_apod_u0?u0:NULL),apod_lr,apod_hr,dx,dy,r,nx,ny,Nx,Ny,nimages,vflag);
 
   /******************************/
   /* write output TIFF image(s) */

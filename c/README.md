@@ -115,6 +115,7 @@ When the installation is done, you should be able to find the executable files
 listed below in the [`src`](src) directory of the package:
 
 + `simulator`
++ `gendataset`
 + `stack-apodization`
 + `remove-blackborders`
 + `leastsquares-superres`
@@ -253,7 +254,7 @@ source files and the companion article are given below.
 
 | NAME OF THE ROUTINE    | SOURCE FILE                                                  | RELATION WITH THE COMPANION ARTICLE                                                                                                               |
 |------------------------|--------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `apodization`          | [`apodization_kernel.c`](src/apodization_kernel.c)           | computes the apodization filter *gamma* involved in Equation (14) and (15) as well the apodized low-resolution sequence defined in (16)           |
+| `apodization`          | [`apodization_kernel.c`](src/apodization_kernel.c)           | computes the apodization filter *gamma* involved in equations (14)--(16) as well the apodized low-resolution sequence defined in (15)              |
 | `direct_operator_dft`  | [`operators_kernel.c`](src/operators_kernel.c)               | computes the **Discrete Fourier Transform (DFT) of Aj(u)** (operator Aj applied to the high-resolution image u) using Equation (27)               |
 | `adjoint_operator_dft` | [`operators_kernel.c`](src/operators_kernel.c)               | computes the *DFT of adj_Aj(v)* (adjoint of Aj applied to the low-resolution image v) using Equation (28)                                         |
 | `compute_blockmatrix`  | [`leastsquares_kernel.c`](src/leastsquares_kernel.c)         | implements the pseudocode **Algorithm 1**                                                                                                         |
@@ -350,9 +351,9 @@ Synthesizing some realistic datasets from a reference image with
 different dimensions and using arbitrary subsampling factors
 (especially noninteger) can be trickier using the methodology
 described above. More generic synthesis of realistic datasets can be
-carried out using the `gendataset` module that added in v1.0.2 (note
+carried out using the `gendataset` module that was added in [v1.0.2](https://github.com/remy-abergel/linear-superres/releases/tag/v1.0.2) (note
 that this module was not used in the experiments presented in the
-companion [research article](https://hal.science/hal-04612465).
+companion [research article](https://hal.science/hal-04612465)).
 
 To use this module, place yourself in the [`src`](src) directory of
 this package and run the following bash commands:
@@ -474,7 +475,7 @@ the following bash commands:
 ```bash
 # configure experimental parameters (using bash variables)
 sigma_noise=2; # noise standard deviation 
-sigma_apod=1; # apodization parameter
+r_apod=0.025; # Tukey's apodization smoothness parameter
 
 # compute an apodized low-resolution sequence (L=10, zx=2.5, zy=2.4),
 # use noise standard deviation sigma = 2
@@ -482,7 +483,7 @@ sigma_apod=1; # apodization parameter
 ./random-shifts -m -5 -M 5 10 /tmp/shifts.txt
 ./simulator -zx 2.5 -zy 2.4 /tmp/ref_crop.tif /tmp/shifts.txt /tmp/u0_nonrealistic.tif 
 ./tiffaddnoise -g $sigma_noise /tmp/u0_nonrealistic.tif /tmp/u0_noisy.tif
-./stack-apodization -s $sigma_apod -zx 2.5 -zy 2.4 -G /tmp/apod_hr.tif -a /tmp/u0_apod.tif /tmp/u0_noisy.tif /tmp/shifts.txt
+./stack-apodization -r $r_apod -zx 2.5 -zy 2.4 -G /tmp/apod_hr.tif -a /tmp/u0_apod.tif /tmp/u0_noisy.tif /tmp/shifts.txt
 ./tiffop -A /tmp/ref_crop.tif -t /tmp/apod_hr.tif /tmp/ref_apod.tif
 imagej /tmp/u0_apod.tif 
 
@@ -515,8 +516,8 @@ imagej /tmp/absdiff.tif
 # removing the black borders (that do not correspond to useful signal)
 # from the apodized high-resolution images, the observed MSE and PSNR
 # are even closer to their predicted values
-./remove-blackborders -s $sigma_apod -zx 2.5 -zy 2.4 /tmp/shifts.txt /tmp/uls.tif /tmp/uls_crop.tif
-./remove-blackborders -s $sigma_apod -zx 2.5 -zy 2.4 /tmp/shifts.txt /tmp/ref_apod.tif /tmp/ref_apod_crop.tif
+./remove-blackborders -r $r_apod -zx 2.5 -zy 2.4 /tmp/shifts.txt /tmp/uls.tif /tmp/uls_crop.tif
+./remove-blackborders -r $r_apod -zx 2.5 -zy 2.4 /tmp/shifts.txt /tmp/ref_apod.tif /tmp/ref_apod_crop.tif
 ./tiffmse -p 255 /tmp/uls_crop.tif /tmp/ref_apod_crop.tif
 
 # compute the normalized reconstruction error in the Fourier domain
@@ -659,11 +660,11 @@ that described in Figure 6, this experiment takes several minutes).
 ```bash
 # configure experimental parameters (using bash variables)
 sigma_noise=2; # noise standard deviation 
-sigma_apod=1; # apodization parameter
+r_apod=0.025; # Tukey's apodization smoothness parameter
 peakvalue=255; # peak-value used for (observed/predicted) PSNR computation
 
 # prepare reference image
-./tiffextract -r ../../data/bridge_large.tif /tmp/ref_crop.tif 242 108 450 324
+./tiffextract -r ../../data/bridge.tif /tmp/ref_crop.tif 242 108 450 324
 M=`./tiffsize /tmp/ref_crop.tif | grep width | cut -d =  -f 2` # retrieve M = width of the high-resolution domain
 N=`./tiffsize /tmp/ref_crop.tif | grep height | cut -d =  -f 2`;  # retrieve N = height of the high-resolution domain
 
@@ -701,7 +702,7 @@ do
         ./random-shifts -m -5 -M 5 $L /tmp/shifts.txt
         ./simulator -m $m -n $n /tmp/ref_crop.tif /tmp/shifts.txt /tmp/u0_nonrealistic.tif 
         ./tiffaddnoise -g $sigma_noise /tmp/u0_nonrealistic.tif /tmp/u0_noisy.tif
-        ./stack-apodization -s $sigma_apod -M $M -N $N -G /tmp/apod_hr.tif -a /tmp/u0_apod.tif /tmp/u0_noisy.tif /tmp/shifts.txt
+        ./stack-apodization -r $r_apod -M $M -N $N -G /tmp/apod_hr.tif -a /tmp/u0_apod.tif /tmp/u0_noisy.tif /tmp/shifts.txt
 		
         # compute PSNR prediction
 		psnr_pred=`./error-prediction -p $peakvalue -s $sigma_noise -M $M -N $N $m $n /tmp/shifts.txt | grep PSNR | cut -d = -f 2`
@@ -710,12 +711,12 @@ do
         # compute reference image associated to the apodized sequence (and
         # remove black borders caused by apodization)
         ./tiffop -A /tmp/ref_crop.tif -t /tmp/apod_hr.tif /tmp/ref_apod.tif
-        ./remove-blackborders -s $sigma_apod -m $m -n $n /tmp/shifts.txt /tmp/ref_apod.tif /tmp/ref_noborder.tif; 
+        ./remove-blackborders -r $r_apod -m $m -n $n /tmp/shifts.txt /tmp/ref_apod.tif /tmp/ref_noborder.tif; 
         
         # perform least-squares reconstruction & remove black borders caused
         # by apodization
         ./leastsquares-superres -M $M -N $N /tmp/u0_apod.tif /tmp/shifts.txt /tmp/uls.tif
-		./remove-blackborders -s $sigma_apod -m $m -n $n /tmp/shifts.txt /tmp/uls.tif /tmp/uls_noborder.tif; 
+		./remove-blackborders -r $r_apod -m $m -n $n /tmp/shifts.txt /tmp/uls.tif /tmp/uls_noborder.tif; 
         
         # compute observed PSNR between the least-squares reconstruction and
 		# the apodized reference image (remove black-borders)
@@ -770,7 +771,7 @@ do
         ./random-shifts -m -5 -M 5 $L /tmp/shifts.txt
         ./simulator -m $m -n $n /tmp/ref_crop.tif /tmp/shifts.txt /tmp/u0_nonrealistic.tif 
         ./tiffaddnoise -g $sigma_noise /tmp/u0_nonrealistic.tif /tmp/u0_noisy.tif
-        ./stack-apodization -s $sigma_apod -M $M -N $N -G /tmp/apod_hr.tif -a /tmp/u0_apod.tif /tmp/u0_noisy.tif /tmp/shifts.txt
+        ./stack-apodization -r $r_apod -M $M -N $N -G /tmp/apod_hr.tif -a /tmp/u0_apod.tif /tmp/u0_noisy.tif /tmp/shifts.txt
         
         # compute PSNR prediction
         psnr_pred=`./error-prediction -p $peakvalue -s $sigma_noise -M $M -N $N $m $n /tmp/shifts.txt | grep PSNR | cut -d = -f 2`
@@ -779,12 +780,12 @@ do
         # compute reference image associated to the apodized sequence (and
         # remove black borders caused by apodization)
         ./tiffop -A /tmp/ref_crop.tif -t /tmp/apod_hr.tif /tmp/ref_apod.tif
-        ./remove-blackborders -s $sigma_apod -m $m -n $n /tmp/shifts.txt /tmp/ref_apod.tif /tmp/ref_noborder.tif; 
+        ./remove-blackborders -r $r_apod -m $m -n $n /tmp/shifts.txt /tmp/ref_apod.tif /tmp/ref_noborder.tif; 
         
         # perform least-squares reconstruction & remove black borders caused
         # by apodization
         ./leastsquares-superres -M $M -N $N /tmp/u0_apod.tif /tmp/shifts.txt /tmp/uls.tif
-        ./remove-blackborders -s $sigma_apod -m $m -n $n /tmp/shifts.txt /tmp/uls.tif /tmp/uls_noborder.tif; 
+        ./remove-blackborders -r $r_apod -m $m -n $n /tmp/shifts.txt /tmp/uls.tif /tmp/uls_noborder.tif; 
         
         # compute observed PSNR between the least-squares reconstruction and
         # the apodized reference image (remove black-borders)
@@ -836,7 +837,7 @@ n=`./tiffsize /tmp/u0_1_apod.tif | grep height | cut -d =  -f 2` # retrieve n = 
 
 # compute the corresponding apodized high-resolution reference images
 # (one reference image per apodization filter)
-./tiffextract -r ../data/bridge.tif /tmp/ref.tif 242 108 450 324
+./tiffextract -r ../../data/bridge.tif /tmp/ref.tif 242 108 450 324
 ./tiffop -A /tmp/apod_hr1.tif -t /tmp/ref.tif /tmp/ref_apod1.tif
 ./tiffop -A /tmp/apod_hr2.tif -t /tmp/ref.tif /tmp/ref_apod2.tif
 ./tiffop -A /tmp/apod_hr3.tif -t /tmp/ref.tif /tmp/ref_apod3.tif
@@ -1119,7 +1120,7 @@ run the following bash commands:
 
 ```bash
 # apodize the low-resolution sequence
-./stack-apodization -s 0.5 -zx 2 -zy 2 -a /tmp/u0_apod.tif ../../data/2photons.tif ../../data/shifts_2photons.txt
+./stack-apodization -r 0.09 -zx 2 -zy 2 -a /tmp/u0_apod.tif ../../data/2photons.tif ../../data/shifts_2photons.txt
 
 # extract the first image of the apodized low-resolution sequence
 ./tiffextract -i0 0 -i1 0 -r /tmp/u0_apod.tif /tmp/first.tif 0 0 45 75
