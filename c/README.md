@@ -254,7 +254,7 @@ source files and the companion article are given below.
 
 | NAME OF THE ROUTINE    | SOURCE FILE                                                  | RELATION WITH THE COMPANION ARTICLE                                                                                                               |
 |------------------------|--------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `apodization`          | [`apodization_kernel.c`](src/apodization_kernel.c)           | computes the apodization filter *gamma* involved in equations (14) and (16) as well the apodized low-resolution sequence defined in (15)           |
+| `apodization`          | [`apodization_kernel.c`](src/apodization_kernel.c)           | computes the apodization filter *gamma* involved in equations (14)--(16) as well the apodized low-resolution sequence defined in (15)              |
 | `direct_operator_dft`  | [`operators_kernel.c`](src/operators_kernel.c)               | computes the **Discrete Fourier Transform (DFT) of Aj(u)** (operator Aj applied to the high-resolution image u) using Equation (27)               |
 | `adjoint_operator_dft` | [`operators_kernel.c`](src/operators_kernel.c)               | computes the *DFT of adj_Aj(v)* (adjoint of Aj applied to the low-resolution image v) using Equation (28)                                         |
 | `compute_blockmatrix`  | [`leastsquares_kernel.c`](src/leastsquares_kernel.c)         | implements the pseudocode **Algorithm 1**                                                                                                         |
@@ -351,9 +351,9 @@ Synthesizing some realistic datasets from a reference image with
 different dimensions and using arbitrary subsampling factors
 (especially noninteger) can be trickier using the methodology
 described above. More generic synthesis of realistic datasets can be
-carried out using the `gendataset` module that added in v1.0.2 (note
+carried out using the `gendataset` module that was added in [v1.0.2](https://github.com/remy-abergel/linear-superres/releases/tag/v1.0.2) (note
 that this module was not used in the experiments presented in the
-companion [research article](https://hal.science/hal-04612465).
+companion [research article](https://hal.science/hal-04612465)).
 
 To use this module, place yourself in the [`src`](src) directory of
 this package and run the following bash commands:

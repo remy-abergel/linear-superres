@@ -63,15 +63,18 @@ have a closer look to the [modules contained into this package](#modules-descrip
   | [simulator.m](src/simulator.m)                         | Compute a stack of (shifted and subsampled) low-resolution images from an input high resolution image                                                  | implements the operator A defined in Equation (12)               |
   | [stack_apodization.m](src/stack_apodization.m)         | Apodization of a low-resolution sequence (used to avoid reconstruction artifacts when processing real-life sequences)                                  | implements the apodization procedure described in Section 2.3    |
   | [compute_blockmatrix.m](src/compute_blockmatrix.m)     | Computation of a block matrix                                                                                                                          | implements the pseudocode Algorithm 1 described in Section 3.4   |
+  | [error_prediction.m](src/error_prediction.m)           | Prediction of the reconstruction error                                                                                                                 | implements the error amplification map A defined in Equation (41) and the predicted MSE and PSNR (46) associated to the least-squares reconstruction (Section 4)                |
   | [leastsquares_superres.m](src/leastsquares_superres.m) | Super-resolution using the least-squares estimator                                                                                                     | implements the pseudocode Algorithm 2 described in Section 3.4   |
   | [irls.m](src/irls.m)                                   | Iteratively Reweighted Least-Squares                                                                                                                   | implements the IRLS procedure described in Section 6             |
-|                                                        |                                                                                                                                                        |                                                                  |
   | [luckyimaging.m](src/luckyimaging.m)                   | Lucky-imaging procedure for least-squares image super-resolution                                                                                       | implements the lucky-imaging procedure described in Section 6    |
   | [sharpening.m](src/sharpening.m)                       | Image sharpening using a frequency amplification filter                                                                                                | implements the image sharpening procedure described in Section 7 |
+  | [modified_tukey.m](src/modified_tukey.m)               | Modified Tukey apodization profile        | implements the modified Tukey apodization profile defined in Equation (13) and used to compute the apodization filters presented in Section 2.3         |
+  | [shannon_zooming.m](src/shannon_zooming.m) | image zooming using the complex variant of the Shannon interpolation | Used several times to magnify images (see reproducible experiments below) |
+  | [gendataset.m](src/gendataset.m)                       | Synthesizing realistic low-resolution sequences (without periodic-like boundaries) from an input high-resolution image                                 | Used in the online demo |
+  | [perdecomp.m](src/perdecomp.m)           | [Periodic plus smooth decomposition](https://doi.org/10.1007/s10851-010-0227-1) | used by [gendataset.m](src/gendataset.m) to generate realistic low-resolution sequences from a ground-truth high-resolution image | 
   | [imview.m](src/imview.m)                               | Image displayer (display an image into a MATLAB Figure with tight borders AND without interpolation: one pixel of the screen = one pixel of the image) | None                                                             |
   | [mview.m](src/mview.m)                                 | Frame-by-frame movie displayer                                                                                                                         | None                                                             |
-  | [gendataset.m](src/gendataset.m)                       | synthesizing realistic low-resolution sequences (without periodic-like boundaries) from an input high-resolution image                                 | None                                                             |
-
+  
   **Additional note**
 
   The modules [`compute_blockmatrix`](src/compute_blockmatrix.m) and
@@ -146,9 +149,9 @@ Synthesizing some realistic datasets from a reference image with
 different dimensions and using arbitrary subsampling factors
 (especially noninteger) can be trickier using the methodology
 described above. More generic synthesis of realistic datasets can be
-carried out using the gendataset module that added in v1.0.2 (note
+carried out using the gendataset module that was added in [v1.0.2](https://github.com/remy-abergel/linear-superres/releases/tag/v1.0.2) (note
 that this module was not used in the experiments presented in the
-companion research article.
+companion [research article](https://hal.science/hal-04612465)).
 
 To use this module, you can run the following MATLAB commands:
 
