@@ -151,7 +151,7 @@ different dimensions and using arbitrary subsampling factors
 described above. More generic synthesis of realistic datasets can be
 carried out using the gendataset module that was added in [v1.0.2](https://github.com/remy-abergel/linear-superres/releases/tag/v1.0.2) (note
 that this module was not used in the experiments presented in the
-companion [research article](https://hal.science/hal-04612465)).
+companion [research article](https://www.ipol.im/pub/art/2026/550/)).
 
 To use this module, you can run the following MATLAB commands:
 
@@ -855,7 +855,7 @@ figure(); mview(log(1+abs(fftshift(fftshift(fft2(ulucky_mov),1),2))),'black',16,
 
 The dataset used in the following experiments corresponds to an
 in-vivo recording of Purkinje cells of a living rat, which was
-acquired with a 2-photons microscope. This sequence was kindly
+acquired with a 2-photon microscope. This sequence was kindly
 provided to us by [Jorge Enrique
 Ramírez-Buriticá](https://scholar.google.com/citations?user=cQFpBPQAAAAJ&hl=es)
 and [Brandon
